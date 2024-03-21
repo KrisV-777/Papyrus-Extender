@@ -6,7 +6,7 @@
 
 #include "Interface/CustomMenu.h"
 
-namespace Papyrus
+namespace Papyrus::Utility
 {
   namespace Array
   {

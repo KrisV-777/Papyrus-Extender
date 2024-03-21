@@ -1,4 +1,5 @@
 #include "Papyrus/Utility.h"
+#include "Papyrus/Actor.h"
 
 // static void SKSEMessageHandler(SKSE::MessagingInterface::Message* message)
 // {
@@ -74,10 +75,9 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 	SKSE::Init(a_skse);
 
 	const auto papyrus = SKSE::GetPapyrusInterface();
-	papyrus->Register(Papyrus::Register);
-	// papyrus->Register(Papyrus::RegisterFuncs);
-	// papyrus->Register(Papyrus::RegisterEvents);
-	// papyrus->Register(Papyrus::RegisterConfig);
+	papyrus->Register(Papyrus::Utility::Register);
+	papyrus->Register(Papyrus::Actor::Register);
+
 
 	// const auto msging = SKSE::GetMessagingInterface();
 	// if (!msging->RegisterListener("SKSE", SKSEMessageHandler)) {

@@ -10,6 +10,8 @@ set(CXX_FILES
 	src/Interface/CustomMenu.cpp
 	src/Interface/Interface.h
 
+	src/Papyrus/Actor.h
+	src/Papyrus/Actor.cpp
 	src/Papyrus/Utility.h
 	src/Papyrus/Utility.cpp
 )
