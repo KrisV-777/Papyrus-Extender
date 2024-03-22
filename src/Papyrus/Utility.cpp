@@ -8,6 +8,20 @@
 
 namespace Papyrus::Utility
 {
+	inline std::optional<sol::state> OpenLua(const std::string& code)
+	{
+		sol::state lua{};
+		auto success = [&]() mutable {
+			if (fs::exists(code)) {
+				return lua.script_file(code);
+			}
+			return lua.script(code);
+		};
+		if (success())
+			return lua;
+		return std::nullopt;
+	}
+
   namespace Array
   {
     template <typename T>
@@ -24,16 +38,15 @@ namespace Papyrus::Utility
 		bool Sort(VM* a_vm, StackID a_stackID, T& arr, const std::string& code)
 		{
 			try {
-				sol::state lua{};
-				const auto success = lua.script(code);
+				auto lua = OpenLua(code);
+				if (!lua)
+					return false;
 				std::stable_sort(arr.begin(), arr.end(), [&](auto a, auto b) -> bool {
 					if constexpr (std::is_same_v<T, RE::reference_array<RE::BSFixedString>>) {
-						std::string a_{ a.data() };
-						std::string b_{ b.data() };
-						bool ret = lua["compare"](a_, b_);
+						bool ret = (*lua)["compare"](a.data(), b.data());
 						return ret;
 					} else {
-						bool ret = lua["compare"](a, b);
+						bool ret = (*lua)["compare"](a, b);
 						return ret;
 					}
 				});
@@ -51,15 +64,15 @@ namespace Papyrus::Utility
 		int32_t FindIf(VM* a_vm, StackID a_stackID, T& arr, const std::string& code)
 		{
 			try {
-				sol::state lua{};
-				const auto success = lua.script(code);
+				auto lua = OpenLua(code);
+				if (!lua)
+					return -2;
 				const auto where = std::find_if(arr.begin(), arr.end(), [&](auto a) -> bool {
 					if constexpr (std::is_same_v<T, RE::reference_array<RE::BSFixedString>>) {
-						std::string a_{ a.data() };
-						bool ret = lua["predicate"](a_);
+						bool ret = (*lua)["predicate"](a.data());
 						return ret;
 					} else {
-						bool ret = lua["predicate"](a);
+						bool ret = (*lua)["predicate"](a);
 						return ret;
 					}
 				});
@@ -73,22 +86,17 @@ namespace Papyrus::Utility
 		int32_t FindIf_Float(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, RE::reference_array<float> arr, std::string lua) { return FindIf(a_vm, a_stackID, arr, lua); }
 		int32_t FindIf_String(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, RE::reference_array<RE::BSFixedString> arr, std::string lua) { return FindIf(a_vm, a_stackID, arr, lua); }
 
-		std::vector<int> PushFrontInt(RE::StaticFunctionTag*, std::vector<int> arr, int val)
+		std::vector<int> PushFront_Int(RE::StaticFunctionTag*, std::vector<int> arr, int val)
     {
       arr.insert(arr.begin(), val);
       return arr;
     }
-		std::vector<bool> PushFrontBool(RE::StaticFunctionTag*, std::vector<bool> arr, bool val)
+		std::vector<float> PushFront_Float(RE::StaticFunctionTag*, std::vector<float> arr, float val)
     {
       arr.insert(arr.begin(), val);
       return arr;
     }
-		std::vector<float> PushFrontFloat(RE::StaticFunctionTag*, std::vector<float> arr, float val)
-    {
-      arr.insert(arr.begin(), val);
-      return arr;
-    }
-		std::vector<RE::BSFixedString> PushFrontString(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, RE::BSFixedString val)
+		std::vector<RE::BSFixedString> PushFront_String(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, RE::BSFixedString val)
     {
       arr.insert(arr.begin(), val);
       return arr;

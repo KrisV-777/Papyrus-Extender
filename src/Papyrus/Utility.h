@@ -16,10 +16,9 @@ namespace Papyrus::Utility
 		int32_t FindIf_Float(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, RE::reference_array<float> arr, std::string lua);
 		int32_t FindIf_String(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, RE::reference_array<RE::BSFixedString> arr, std::string lua);
 
-		std::vector<int> PushFrontInt(RE::StaticFunctionTag*, std::vector<int> arr, int push);
-		std::vector<bool> PushFrontBool(RE::StaticFunctionTag*, std::vector<bool> arr, bool push);
-		std::vector<float> PushFrontFloat(RE::StaticFunctionTag*, std::vector<float> arr, float push);
-		std::vector<RE::BSFixedString> PushFrontString(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, RE::BSFixedString push);
+		std::vector<int> PushFront_Int(RE::StaticFunctionTag*, std::vector<int> arr, int push);
+		std::vector<float> PushFront_Float(RE::StaticFunctionTag*, std::vector<float> arr, float push);
+		std::vector<RE::BSFixedString> PushFront_String(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, RE::BSFixedString push);
 
 		inline void Register(VM* a_vm){
       REGISTERFUNC(Shuffle_Int, "SPE_Utility", false);
@@ -34,10 +33,9 @@ namespace Papyrus::Utility
 			REGISTERFUNC(FindIf_Float, "SPE_Utility", false);
 			REGISTERFUNC(FindIf_String, "SPE_Utility", false);
 
-			REGISTERFUNC(PushFrontInt, "SPE_Utility", false);
-      REGISTERFUNC(PushFrontBool, "SPE_Utility", false);
-      REGISTERFUNC(PushFrontFloat, "SPE_Utility", false);
-      REGISTERFUNC(PushFrontString, "SPE_Utility", false);
+			REGISTERFUNC(PushFront_Int, "SPE_Utility", false);
+      REGISTERFUNC(PushFront_Float, "SPE_Utility", false);
+      REGISTERFUNC(PushFront_String, "SPE_Utility", false);
 		};
 	};
 
