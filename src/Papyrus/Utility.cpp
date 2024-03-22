@@ -102,6 +102,11 @@ namespace Papyrus::Utility
 			RE::ConsoleLog::GetSingleton()->Print(a_msg.c_str());
 		}
 
+		RE::BSFixedString GetMenuName(RE::StaticFunctionTag*)
+		{
+			return Internal::Interface::CustomMenu::NAME;
+		}
+
 		bool OpenCustomMenu(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, std::string_view a_filepath)
 		{
 			if (a_filepath.empty()) {

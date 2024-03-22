@@ -22,36 +22,38 @@ namespace Papyrus::Utility
 		std::vector<RE::BSFixedString> PushFrontString(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, RE::BSFixedString push);
 
 		inline void Register(VM* a_vm){
-      REGISTERFUNC(Shuffle_Int, "SPE_Utility");
-      REGISTERFUNC(Shuffle_Float, "SPE_Utility");
-      REGISTERFUNC(Shuffle_String, "SPE_Utility");
+      REGISTERFUNC(Shuffle_Int, "SPE_Utility", false);
+      REGISTERFUNC(Shuffle_Float, "SPE_Utility", false);
+      REGISTERFUNC(Shuffle_String, "SPE_Utility", false);
 
-      REGISTERFUNC(Sort_Int, "SPE_Utility");
-      REGISTERFUNC(Sort_Float, "SPE_Utility");
-      REGISTERFUNC(Sort_String, "SPE_Utility");
+      REGISTERFUNC(Sort_Int, "SPE_Utility", false);
+      REGISTERFUNC(Sort_Float, "SPE_Utility", false);
+      REGISTERFUNC(Sort_String, "SPE_Utility", false);
 
-			REGISTERFUNC(FindIf_Int, "SPE_Utility");
-			REGISTERFUNC(FindIf_Float, "SPE_Utility");
-			REGISTERFUNC(FindIf_String, "SPE_Utility");
+			REGISTERFUNC(FindIf_Int, "SPE_Utility", false);
+			REGISTERFUNC(FindIf_Float, "SPE_Utility", false);
+			REGISTERFUNC(FindIf_String, "SPE_Utility", false);
 
-			REGISTERFUNC(PushFrontInt, "SPE_Utility");
-      REGISTERFUNC(PushFrontBool, "SPE_Utility");
-      REGISTERFUNC(PushFrontFloat, "SPE_Utility");
-      REGISTERFUNC(PushFrontString, "SPE_Utility");
+			REGISTERFUNC(PushFrontInt, "SPE_Utility", false);
+      REGISTERFUNC(PushFrontBool, "SPE_Utility", false);
+      REGISTERFUNC(PushFrontFloat, "SPE_Utility", false);
+      REGISTERFUNC(PushFrontString, "SPE_Utility", false);
 		};
 	};
 
   namespace Interface
 	{
 		void PrintConsole(RE::StaticFunctionTag*, RE::BSFixedString a_msg);
+		RE::BSFixedString GetMenuName(RE::StaticFunctionTag*);
 		bool OpenCustomMenu(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, std::string_view a_filepath);
 		void CloseCustomMenu(RE::StaticFunctionTag*);
 
 		inline void Register(VM* a_vm)
 		{
-			REGISTERFUNC(PrintConsole, "SPE_Utility");
-			REGISTERFUNC(OpenCustomMenu, "SPE_Utility");
-			REGISTERFUNC(CloseCustomMenu, "SPE_Utility");
+			REGISTERFUNC(PrintConsole, "SPE_Interface", true);
+			REGISTERFUNC(GetMenuName, "SPE_Interface", true);
+			REGISTERFUNC(OpenCustomMenu, "SPE_Interface", true);
+			REGISTERFUNC(CloseCustomMenu, "SPE_Interface", true);
 		};
 	};
 
