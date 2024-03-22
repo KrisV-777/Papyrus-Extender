@@ -1,7 +1,7 @@
 {
-  "name": "acheron",
-  "version-string": "1.4.4.4",
-  "description": "a death alternative mod for skyrim",
+  "name": "papyrusextender",
+  "version-string": "1.0.0.0",
+  "description": "some utility functions for papyrus",
   "dependencies": [
     "boost-stl-interfaces",
     "rsm-binary-io",
