@@ -8,7 +8,6 @@
 
 #include <atomic>
 #include <unordered_map>
-// #include <sol/
 
 #pragma warning(push)
 #include <spdlog/sinks/msvc_sink.h>

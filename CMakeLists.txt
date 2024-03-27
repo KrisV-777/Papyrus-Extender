@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 
 set(ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+option(BUILD_SKYRIMAE "Build for Skyrim AE" OFF)
+option(BUILD_SKYRIMVR "Build for Skyrim VR" OFF)
 
 # ---- Project ----
 project(
@@ -48,7 +50,23 @@ else()
 endif()
 
 # ---- Dependencies ----
-add_subdirectory("./lib/CommonLibSSE" CommonLibSSE)
+if(BUILD_SKYRIMVR)
+    add_compile_definitions(SKYRIMVR)
+    add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+    add_subdirectory("./lib/CommonLibVR" CommonLibSSE)
+    set(CommonLibName "CommonLibVR")
+    message("Building Skyrim VR")
+else()
+    if(BUILD_SKYRIMAE)
+        add_compile_definitions(SKYRIM_AE)
+        add_compile_definitions(SKYRIM_SUPPORT_AE)
+        message("Building Skyrim 1.6")
+    else()
+        message("Building Skyrim 1.5")
+    endif()
+    set(CommonLibName "CommonLibSSE")
+    add_subdirectory("./lib/CommonLibSSE" CommonLibSSE)
+endif()
 
 find_package(sol2 REQUIRED CONFIG)
 find_package(spdlog REQUIRED CONFIG)
@@ -120,7 +138,7 @@ target_include_directories(
 target_link_libraries(
     "${PROJECT_NAME}"
     PRIVATE
-    CommonLibSSE
+    ${CommonLibName}::${CommonLibName}
     spdlog::spdlog
     "${LUA_LIBRARIES}"
     sol2
