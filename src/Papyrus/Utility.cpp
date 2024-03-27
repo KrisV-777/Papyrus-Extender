@@ -12,12 +12,16 @@ namespace Papyrus::Utility
 	{
 		sol::state lua{};
 		auto success = [&]() mutable {
-			if (fs::exists(code)) {
-				return lua.script_file(code);
+			if (code.ends_with(".lua")) {
+				if (!fs::exists(code)) {
+					throw std::exception(fmt::format("No file at path {}", code).c_str());
+				}
+				const auto res = lua.script_file(code);
+				return res.valid();
 			}
-			return lua.script(code);
-		};
-		if (success())
+			return lua.script(code).valid();
+		}();
+		if (success)
 			return lua;
 		return std::nullopt;
 	}
