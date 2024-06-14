@@ -7,5 +7,5 @@ Function PrintConsole(String asText) native global
 String Function GetMenuName() native global
 ; Open/close a custom menu under the given filepath
 ; The difference between this menu and the one provided by SKSE is that this one will *not* pause the game while open
-Function OpenCustomMenu(String asFilePath) native global
+bool Function OpenCustomMenu(String asFilePath) native global
 Function CloseCustomMenu() native global
