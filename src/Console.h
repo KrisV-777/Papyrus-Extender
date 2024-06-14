@@ -1,6 +1,7 @@
 #pragma once
 
 #include "StringUtil.h"
+#include "Papyrus/ObjectRef.h"
 
 namespace Registry::Console
 {
@@ -40,7 +41,7 @@ namespace Registry::Console
 	template <typename T>
 	static T FormFromString(const std::string_view a_string)
 	{
-		const size_t base = a_string.starts_with("0x") ? 16 : 10;
+		const int base = a_string.starts_with("0x") ? 16 : 10;
 		return FormFromString<T>(a_string, base);
 	}
 
@@ -55,10 +56,22 @@ namespace Registry::Console
       }
 
       auto args = String::Split(cmd, ' ');
-
-			if (!a_targetRef || args.empty()) {
-				PrintConsole("Missing Target");
+			if (args.size() == 3) {
+				if (args[1] == "getcontainer") {
+					auto t = FormFromString<RE::TESForm*>(args[2]);
+					if (!t) {
+						PrintConsole("Invalid FormID {}", args[2], 16);
+					} else {
+						auto vec = Papyrus::ObjectRef::GetContainer(nullptr, 0, nullptr, t);
+						PrintConsole("Object found in containers: {}", vec.size());
+						for (auto&& i : vec) {
+							PrintConsole("-> {}", i->GetFormID());
+						}
+					}
+				}
 			}
+
+			PrintConsole("Invalid command");
 		}
 		static inline REL::Relocation<decltype(thunk)> func;
 	};
@@ -67,5 +80,7 @@ namespace Registry::Console
 	{
 		REL::Relocation<std::uintptr_t> target{ RELOCATION_ID(52065, 52952), OFFSET(0xE2, 0x52) };
 		stl::write_thunk_call<CompileAndRun>(target.address());
+
+		logger::info("Registered Console Integration");
 	}
 }
