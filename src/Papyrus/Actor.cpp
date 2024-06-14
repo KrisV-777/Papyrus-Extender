@@ -4,7 +4,7 @@ namespace Papyrus::Actor
 {
 	RE::BSFixedString GetRaceType(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, RE::Actor* a_actor)
   {
-    if (a_actor) {
+    if (!a_actor) {
       a_vm->TraceStack("Actor is none", a_stackID);
       return "";
     }
