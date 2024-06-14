@@ -14,12 +14,16 @@ namespace Papyrus::Interface
 		return Internal::Interface::CustomMenu::NAME;
 	}
 
-	bool OpenCustomMenu(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, std::string_view a_filepath)
+	bool OpenCustomMenu(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, std::string a_filepath)
 	{
 		if (a_filepath.empty()) {
 			a_vm->TraceStack("File path to swf file is empty", a_stackID);
 			return false;
-		} else if (!fs::exists(fmt::format("Data\\Interface\\{}.swf", a_filepath))) {
+		}
+		if (!a_filepath.ends_with(".swf")) {
+			a_filepath = fmt::format("{}.swf", a_filepath);
+		}
+		if (!fs::exists(fmt::format("Data\\Interface\\{}", a_filepath))) {
 			a_vm->TraceStack("File path does not lead to a valid file", a_stackID);
 			return false;
 		}

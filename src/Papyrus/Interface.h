@@ -4,7 +4,7 @@
 	{
 		void PrintConsole(RE::StaticFunctionTag*, RE::BSFixedString a_msg);
 		RE::BSFixedString GetMenuName(RE::StaticFunctionTag*);
-		bool OpenCustomMenu(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, std::string_view a_filepath);
+		bool OpenCustomMenu(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, std::string a_filepath);
 		void CloseCustomMenu(RE::StaticFunctionTag*);
 
 		inline bool Register(VM* a_vm)
