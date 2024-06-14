@@ -16,14 +16,15 @@ namespace Internal::Interface
 				Flag::kDisablePauseMenu);
 
 		auto scaleform = RE::BSScaleformManager::GetSingleton();
-		[[maybe_unused]] bool success = scaleform->LoadMovieEx(this, filepath, [](RE::GFxMovieDef* a_def) -> void {
+		bool success = scaleform->LoadMovieEx(this, filepath, [](RE::GFxMovieDef* a_def) -> void {
 			a_def->SetState(
 					RE::GFxState::StateType::kLog,
 					RE::make_gptr<FlashLogger<CustomMenu>>().get());
 		});
-		assert(success);
+		if (!success)
+			throw std::exception("Failed to load movie");
 
-		auto view = this->uiMovie;
+		auto& view = this->uiMovie;
 		view->SetMouseCursorCount(0);
 		FunctionManager::AttachSKSEFunctions(view);
 	}

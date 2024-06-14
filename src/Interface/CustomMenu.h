@@ -9,7 +9,7 @@ namespace Internal::Interface
 		using GRefCountBaseStatImpl::operator delete;
 
 	public:
-		static constexpr std::string_view NAME{ "CPECustomMenu" };
+		static constexpr const char* NAME{ "CPECustomMenu" };
 
 		CustomMenu();
 		~CustomMenu() = default;
@@ -29,6 +29,6 @@ namespace Internal::Interface
 		RE::UI_MESSAGE_RESULTS ProcessMessage(RE::UIMessage& a_message) override;
 
 	private:
-		static inline std::string_view filepath{ ""sv };
+		static inline std::string filepath{ ""sv };
 	};
 }

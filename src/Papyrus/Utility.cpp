@@ -1,8 +1,8 @@
 #include "Utility.h"
 
 #define SOL_ALL_SAFETIES_ON 1
-#include <sol/sol.hpp>
 #include <lua.hpp>
+#include <sol/sol.hpp>
 
 namespace Papyrus::Utility
 {
@@ -24,13 +24,13 @@ namespace Papyrus::Utility
 		return std::nullopt;
 	}
 
-  namespace Array
-  {
-    template <typename T>
-    void Shuffle(T& arr)
-    {
+	namespace Array
+	{
+		template <typename T>
+		void Shuffle(T& arr)
+		{
 			static std::mt19937 rng{ std::random_device{}() };
-      std::ranges::shuffle(arr, rng);
+			std::ranges::shuffle(arr, rng);
 		}
 		void Shuffle_Int(RE::StaticFunctionTag*, RE::reference_array<int> arr) { Shuffle(arr); }
 		void Shuffle_Float(RE::StaticFunctionTag*, RE::reference_array<float> arr) { Shuffle(arr); }
@@ -89,19 +89,19 @@ namespace Papyrus::Utility
 		int32_t FindIf_String(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, RE::reference_array<RE::BSFixedString> arr, std::string lua) { return FindIf(a_vm, a_stackID, arr, lua); }
 
 		std::vector<int> PushFront_Int(RE::StaticFunctionTag*, std::vector<int> arr, int val)
-    {
-      arr.insert(arr.begin(), val);
-      return arr;
-    }
+		{
+			arr.insert(arr.begin(), val);
+			return arr;
+		}
 		std::vector<float> PushFront_Float(RE::StaticFunctionTag*, std::vector<float> arr, float val)
-    {
-      arr.insert(arr.begin(), val);
-      return arr;
-    }
+		{
+			arr.insert(arr.begin(), val);
+			return arr;
+		}
 		std::vector<RE::BSFixedString> PushFront_String(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, RE::BSFixedString val)
-    {
-      arr.insert(arr.begin(), val);
-      return arr;
-    }
+		{
+			arr.insert(arr.begin(), val);
+			return arr;
+		}
 	}
 }

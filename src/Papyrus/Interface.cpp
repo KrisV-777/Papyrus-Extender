@@ -20,10 +20,10 @@ namespace Papyrus::Interface
 			a_vm->TraceStack("File path to swf file is empty", a_stackID);
 			return false;
 		}
-		if (!a_filepath.ends_with(".swf")) {
-			a_filepath = fmt::format("{}.swf", a_filepath);
+		if (a_filepath.ends_with(".swf")) {
+			a_filepath = a_filepath.substr(0, a_filepath.size() - 4);
 		}
-		if (!fs::exists(fmt::format("Data\\Interface\\{}", a_filepath))) {
+		if (!fs::exists(fmt::format("Data\\Interface\\{}.swf", a_filepath))) {
 			a_vm->TraceStack("File path does not lead to a valid file", a_stackID);
 			return false;
 		}
@@ -31,10 +31,14 @@ namespace Papyrus::Interface
 		if (Internal::Interface::CustomMenu::IsOpen()) {
 			return false;
 		}
-
-		Internal::Interface::CustomMenu::SetSwfPath(a_filepath);
-		Internal::Interface::CustomMenu::Show();
-		return true;
+		try {
+			Internal::Interface::CustomMenu::SetSwfPath(a_filepath);
+			Internal::Interface::CustomMenu::Show();
+			return true;
+		} catch (const std::exception& e) {
+			a_vm->TraceStack(e.what(), a_stackID);
+			return false;
+		}
 	}
 
 	void CloseCustomMenu(RE::StaticFunctionTag*)

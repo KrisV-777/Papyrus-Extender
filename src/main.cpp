@@ -1,4 +1,6 @@
 #include "Papyrus/Papyrus.h"
+#include "Console.h"
+#include "Interface/CustomMenu.h"
 
 // static void SKSEMessageHandler(SKSE::MessagingInterface::Message* message)
 // {
@@ -77,6 +79,9 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 		logger::critical("Failed to register papyrus functions");
 		return false;
 	}
+
+	Internal::Interface::CustomMenu::Register();
+	Registry::Console::Install();
 
 	// const auto msging = SKSE::GetMessagingInterface();
 	// if (!msging->RegisterListener("SKSE", SKSEMessageHandler)) {

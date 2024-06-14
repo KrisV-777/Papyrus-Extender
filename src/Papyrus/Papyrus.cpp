@@ -2,6 +2,7 @@
 
 #include "Actor.h"
 #include "Interface.h"
+#include "ObjectRef.h"
 #include "Utility.h"
 
 namespace Papyrus
@@ -17,7 +18,10 @@ namespace Papyrus
 		papyrus->Register(Actor::Register);
     papyrus->Register(Interface::Register);
     papyrus->Register(Utility::Register);
+		papyrus->Register(ObjectRef::Register);
 
-    return true;
+		logger::info("Registered Papyrus Functions");
+
+		return true;
 	}
 }	 // namespace Papyrus
