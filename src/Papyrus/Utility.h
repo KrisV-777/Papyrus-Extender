@@ -2,8 +2,8 @@
 
 namespace Papyrus::Utility
 {
-  namespace Array
-  {
+	namespace Array
+	{
 		void Shuffle_Int(RE::StaticFunctionTag*, RE::reference_array<int> arr);
 		void Shuffle_Float(RE::StaticFunctionTag*, RE::reference_array<float> arr);
 		void Shuffle_String(RE::StaticFunctionTag*, RE::reference_array<RE::BSFixedString> arr);
@@ -20,46 +20,30 @@ namespace Papyrus::Utility
 		std::vector<float> PushFront_Float(RE::StaticFunctionTag*, std::vector<float> arr, float push);
 		std::vector<RE::BSFixedString> PushFront_String(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, RE::BSFixedString push);
 
-		inline void Register(VM* a_vm){
-      REGISTERFUNC(Shuffle_Int, "SPE_Utility", false);
-      REGISTERFUNC(Shuffle_Float, "SPE_Utility", false);
-      REGISTERFUNC(Shuffle_String, "SPE_Utility", false);
+		inline void Register(VM* a_vm)
+		{
+			REGISTERFUNC(Shuffle_Int, "SPE_Utility", false);
+			REGISTERFUNC(Shuffle_Float, "SPE_Utility", false);
+			REGISTERFUNC(Shuffle_String, "SPE_Utility", false);
 
-      REGISTERFUNC(Sort_Int, "SPE_Utility", false);
-      REGISTERFUNC(Sort_Float, "SPE_Utility", false);
-      REGISTERFUNC(Sort_String, "SPE_Utility", false);
+			REGISTERFUNC(Sort_Int, "SPE_Utility", false);
+			REGISTERFUNC(Sort_Float, "SPE_Utility", false);
+			REGISTERFUNC(Sort_String, "SPE_Utility", false);
 
 			REGISTERFUNC(FindIf_Int, "SPE_Utility", false);
 			REGISTERFUNC(FindIf_Float, "SPE_Utility", false);
 			REGISTERFUNC(FindIf_String, "SPE_Utility", false);
 
 			REGISTERFUNC(PushFront_Int, "SPE_Utility", false);
-      REGISTERFUNC(PushFront_Float, "SPE_Utility", false);
-      REGISTERFUNC(PushFront_String, "SPE_Utility", false);
-		};
-	};
-
-  namespace Interface
-	{
-		void PrintConsole(RE::StaticFunctionTag*, RE::BSFixedString a_msg);
-		RE::BSFixedString GetMenuName(RE::StaticFunctionTag*);
-		bool OpenCustomMenu(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, std::string_view a_filepath);
-		void CloseCustomMenu(RE::StaticFunctionTag*);
-
-		inline void Register(VM* a_vm)
-		{
-			REGISTERFUNC(PrintConsole, "SPE_Interface", true);
-			REGISTERFUNC(GetMenuName, "SPE_Interface", true);
-			REGISTERFUNC(OpenCustomMenu, "SPE_Interface", true);
-			REGISTERFUNC(CloseCustomMenu, "SPE_Interface", true);
-		};
-	};
+			REGISTERFUNC(PushFront_Float, "SPE_Utility", false);
+			REGISTERFUNC(PushFront_String, "SPE_Utility", false);
+		}
+	}
 
 	inline bool Register(VM* a_vm)
 	{
 		Array::Register(a_vm);
-		Interface::Register(a_vm);
 
 		return true;
-	};
+	}
 }
