@@ -16,6 +16,8 @@ set(CXX_FILES
 	src/Papyrus/Papyrus.cpp
 	src/Papyrus/Actor.h
 	src/Papyrus/Actor.cpp
+	src/Papyrus/Form.h
+	src/Papyrus/Form.cpp
 	src/Papyrus/Interface.h
 	src/Papyrus/Interface.cpp
 	src/Papyrus/ObjectRef.h

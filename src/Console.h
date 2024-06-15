@@ -1,7 +1,7 @@
 #pragma once
 
-#include "StringUtil.h"
 #include "Papyrus/ObjectRef.h"
+#include "StringUtil.h"
 
 namespace Registry::Console
 {
@@ -52,23 +52,7 @@ namespace Registry::Console
 			std::string cmd{ a_script->GetCommand() };
 			String::ToLower(cmd);
 			if (!cmd.starts_with("scrab")) {
-        return func(a_script, a_compiler, a_name, a_targetRef);
-      }
-
-      auto args = String::Split(cmd, ' ');
-			if (args.size() == 3) {
-				if (args[1] == "getcontainer") {
-					auto t = FormFromString<RE::TESForm*>(args[2]);
-					if (!t) {
-						PrintConsole("Invalid FormID {}", args[2], 16);
-					} else {
-						auto vec = Papyrus::ObjectRef::GetContainer(nullptr, 0, nullptr, t);
-						PrintConsole("Object found in containers: {}", vec.size());
-						for (auto&& i : vec) {
-							PrintConsole("-> {}", i->GetFormID());
-						}
-					}
-				}
+				return func(a_script, a_compiler, a_name, a_targetRef);
 			}
 
 			PrintConsole("Invalid command");

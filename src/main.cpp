@@ -81,7 +81,7 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 	}
 
 	Internal::Interface::CustomMenu::Register();
-	Registry::Console::Install();
+	// Registry::Console::Install();
 
 	// const auto msging = SKSE::GetMessagingInterface();
 	// if (!msging->RegisterListener("SKSE", SKSEMessageHandler)) {
