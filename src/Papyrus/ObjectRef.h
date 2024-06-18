@@ -3,7 +3,7 @@
 namespace Papyrus::ObjectRef
 {
 
-	inline bool Register(VM* a_vm)
+	inline bool Register(VM*)
 	{
 		return true;
 	}
