@@ -88,20 +88,49 @@ namespace Papyrus::Utility
 		int32_t FindIf_Float(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, RE::reference_array<float> arr, std::string lua) { return FindIf(a_vm, a_stackID, arr, lua); }
 		int32_t FindIf_String(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, RE::reference_array<RE::BSFixedString> arr, std::string lua) { return FindIf(a_vm, a_stackID, arr, lua); }
 
-		std::vector<int> PushFront_Int(RE::StaticFunctionTag*, std::vector<int> arr, int val)
+		template <typename T, typename V>
+		T PushFront(T& arr, V val)
 		{
 			arr.insert(arr.begin(), val);
 			return arr;
 		}
-		std::vector<float> PushFront_Float(RE::StaticFunctionTag*, std::vector<float> arr, float val)
+		std::vector<int> PushFront_Int(RE::StaticFunctionTag*, std::vector<int> arr, int val) { return PushFront(arr, val); }
+		std::vector<float> PushFront_Float(RE::StaticFunctionTag*, std::vector<float> arr, float val) { return PushFront(arr, val); }
+		std::vector<RE::BSFixedString> PushFront_String(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, RE::BSFixedString val) { return PushFront(arr, val); }
+
+		template <typename T>
+		T RemoveIf(VM* a_vm, StackID a_stackID, T& arr, const std::string& code)
 		{
-			arr.insert(arr.begin(), val);
+			try {
+				if (auto lua = OpenLua(code)) {
+					std::erase_if(arr, [&](auto it) {
+						if constexpr (std::is_same_v<T, RE::reference_array<RE::BSFixedString>>) {
+							bool ret = (*lua)["predicate"](it.data());
+							return ret;
+						} else {
+							bool ret = (*lua)["predicate"](it);
+							return ret;
+						}
+					});
+				}
+			} catch (const std::exception& e) {
+				a_vm->TraceStack(fmt::format("Invalid Lua Code, Error: {}", e.what()).c_str(), a_stackID);
+			}
 			return arr;
 		}
-		std::vector<RE::BSFixedString> PushFront_String(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, RE::BSFixedString val)
+		std::vector<int> RemoveIf_Int(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, std::vector<int> arr, std::string lua) { return RemoveIf(a_vm, a_stackID, arr, lua); }
+		std::vector<float> RemoveIf_Float(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, std::vector<float> arr, std::string lua) { return RemoveIf(a_vm, a_stackID, arr, lua); }
+		std::vector<RE::BSFixedString> RemoveIf_String(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, std::string lua) { return RemoveIf(a_vm, a_stackID, arr, lua); }
+
+		template <typename T>
+		T FilterArray(T& arr, T& filter)
 		{
-			arr.insert(arr.begin(), val);
+			std::erase_if(arr, [&](auto it) { return std::ranges::contains(filter, it); });
 			return arr;
 		}
+		std::vector<RE::TESForm*> FilterArray_Form(RE::StaticFunctionTag*, std::vector<RE::TESForm*> arr, std::vector<RE::TESForm*> filter) { return FilterArray(arr, filter); }
+		std::vector<int> FilterArray_Int(RE::StaticFunctionTag*, std::vector<int> arr, std::vector<int> filter) { return FilterArray(arr, filter); }
+		std::vector<float> FilterArray_Float(RE::StaticFunctionTag*, std::vector<float> arr, std::vector<float> filter) { return FilterArray(arr, filter); }
+		std::vector<RE::BSFixedString> FilterArray_String(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, std::vector<RE::BSFixedString> filter) { return FilterArray(arr, filter); }
 	}
 }
