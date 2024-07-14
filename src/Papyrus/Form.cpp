@@ -78,4 +78,27 @@ namespace Papyrus::Form
 		return ret;
 	}
 
+	std::vector<RE::TESForm*> FlattenLeveledList(VM* a_vm, StackID a_stackID, RE::StaticFunctionTag*, RE::TESLevItem* a_list)
+	{
+		if (!a_list) {
+			a_vm->TraceStack("List is none", a_stackID);
+			return {};
+		}
+		std::function<std::vector<RE::TESForm*>(RE::TESLevItem*)> flatten = [&](RE::TESLevItem* list) {
+			std::vector<RE::TESForm*> ret{};
+			for (auto&& it : list->entries) {
+				if (!it.form || it.count <= 0)
+					continue;
+				if (auto nested = it.form->As<RE::TESLevItem>()) {
+					auto merge = flatten(nested);
+					ret.insert_range(ret.end(), merge);
+				} else {
+					ret.push_back(it.form);
+				}
+			}
+			return ret;
+		};
+		return flatten(a_list);
+	}
+
 }	 // namespace Papyrus::Form
