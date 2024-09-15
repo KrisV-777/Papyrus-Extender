@@ -23,7 +23,7 @@ namespace Papyrus::Interface
 		if (a_filepath.ends_with(".swf")) {
 			a_filepath = a_filepath.substr(0, a_filepath.size() - 4);
 		}
-		if (!fs::exists(fmt::format("Data\\Interface\\{}.swf", a_filepath))) {
+		if (!fs::exists(std::format("Data\\Interface\\{}.swf", a_filepath))) {
 			a_vm->TraceStack("File path does not lead to a valid file", a_stackID);
 			return false;
 		}

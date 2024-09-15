@@ -12,7 +12,7 @@ namespace Papyrus::Utility
 		auto success = [&]() mutable {
 			if (code.ends_with(".lua")) {
 				if (!fs::exists(code)) {
-					throw std::exception(fmt::format("No file at path {}", code).c_str());
+					throw std::exception(std::format("No file at path {}", code).c_str());
 				}
 				const auto res = lua.script_file(code);
 				return res.valid();
@@ -54,7 +54,7 @@ namespace Papyrus::Utility
 				});
 				return true;
 			} catch (const std::exception& e) {
-				a_vm->TraceStack(fmt::format("Invalid Lua Code, Error: {}", e.what()).c_str(), a_stackID);
+				a_vm->TraceStack(std::format("Invalid Lua Code, Error: {}", e.what()).c_str(), a_stackID);
 				return false;
 			}
 		}
@@ -80,7 +80,7 @@ namespace Papyrus::Utility
 				});
 				return where == arr.end() ? -1 : static_cast<int32_t>(std::ptrdiff_t(std::distance(arr.begin(), where)));
 			} catch (const std::exception& e) {
-				a_vm->TraceStack(fmt::format("Invalid Lua Code, Error: {}", e.what()).c_str(), a_stackID);
+				a_vm->TraceStack(std::format("Invalid Lua Code, Error: {}", e.what()).c_str(), a_stackID);
 				return -2;
 			}
 		}
@@ -114,7 +114,7 @@ namespace Papyrus::Utility
 					});
 				}
 			} catch (const std::exception& e) {
-				a_vm->TraceStack(fmt::format("Invalid Lua Code, Error: {}", e.what()).c_str(), a_stackID);
+				a_vm->TraceStack(std::format("Invalid Lua Code, Error: {}", e.what()).c_str(), a_stackID);
 			}
 			return arr;
 		}
