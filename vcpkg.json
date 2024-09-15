@@ -6,12 +6,13 @@
     "boost-stl-interfaces",
     "rsm-binary-io",
     "spdlog",
+    "lua",
     "sol2"
   ],
   "overrides": [
     {
       "name": "fmt",
-      "version": "9.1.0"
+      "version": "10.2.1"
     }
   ],
   "builtin-baseline": "b7dba7f9aad09a56900f21cd78cfda1258e54e38"
