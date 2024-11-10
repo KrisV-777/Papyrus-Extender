@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Papyrus/ObjectRef.h"
-#include "StringUtil.h"
+#include "Utility/String.h"
 
 namespace Registry::Console
 {
@@ -62,7 +62,7 @@ namespace Registry::Console
 
 	inline void Install()
 	{
-		REL::Relocation<std::uintptr_t> target{ RELOCATION_ID(52065, 52952), OFFSET(0xE2, 0x52) };
+		REL::Relocation<std::uintptr_t> target{ RELOCATION_ID(52065, 52952), OFFSET(0xE2, 0x52, 0x0) };
 		stl::write_thunk_call<CompileAndRun>(target.address());
 
 		logger::info("Registered Console Integration");

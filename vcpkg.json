@@ -1,19 +1,19 @@
 {
-  "name": "papyrusextender",
+  "name": "scrabpapyrusextender",
   "version-string": "1.0.0.0",
   "description": "some utility functions for papyrus",
   "dependencies": [
-    "boost-stl-interfaces",
     "rsm-binary-io",
+    "directxtk",
+    "rapidcsv",
     "spdlog",
+    "xbyak",
+    "catch2",
+    "magic-enum",
+    "nlohmann-json",
+    "detours",
     "lua",
     "sol2"
   ],
-  "overrides": [
-    {
-      "name": "fmt",
-      "version": "10.2.1"
-    }
-  ],
-  "builtin-baseline": "b7dba7f9aad09a56900f21cd78cfda1258e54e38"
+  "builtin-baseline": "3508985146f1b1d248c67ead13f8f54be5b4f5da"
 }

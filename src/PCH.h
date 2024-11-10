@@ -8,6 +8,7 @@
 
 #include <atomic>
 #include <unordered_map>
+#include <unordered_set>
 
 #pragma warning(push)
 #include <spdlog/sinks/msvc_sink.h>
@@ -21,14 +22,17 @@ using namespace std::literals;
 #include "Random.h"
 #include "Singleton.h"
 
-static constexpr auto CONFIGPATH = [](std::string file) -> std::string { return "Data\\SKSE\\Acheron\\"s + file; };
-
 #ifdef SKYRIM_SUPPORT_AE
 #define RELID(SE, AE) REL::ID(AE)
-#define OFFSET(SE, AE) AE
+#define OFFSET(SE, AE, VR) AE
+#else
+#ifdef SKYRIMVR
+#define RELID(SE, AE) REL::ID(AE)
+#define OFFSET(SE, AE, VR) VR
 #else
 #define RELID(SE, AE) REL::ID(SE)
-#define OFFSET(SE, AE) SE
+#define OFFSET(SE, AE, VR) SE
+#endif
 #endif
 
 namespace stl

@@ -1,6 +1,8 @@
-#include "Papyrus/Papyrus.h"
 #include "Console.h"
+#include "Hooks/Hooks.h"
 #include "Interface/CustomMenu.h"
+#include "Papyrus/Papyrus.h"
+#include "Serialize.h"
 
 // static void SKSEMessageHandler(SKSE::MessagingInterface::Message* message)
 // {
@@ -88,6 +90,16 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 	// 	logger::critical("Failed to register Listener");
 	// 	return false;
 	// }
+
+	#ifndef SKYRIMVR
+		Hooks::Install();
+		#endif
+
+	const auto serialization = SKSE::GetSerializationInterface();
+	serialization->SetUniqueID(Serialize::RecordID);
+	serialization->SetSaveCallback(Serialize::Save);
+	serialization->SetLoadCallback(Serialize::Load);
+	serialization->SetRevertCallback(Serialize::Revert);
 
 	logger::info("{} loaded", Plugin::NAME);
 

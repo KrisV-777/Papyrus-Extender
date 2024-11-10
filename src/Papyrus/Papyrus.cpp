@@ -5,6 +5,7 @@
 #include "Interface.h"
 #include "ObjectRef.h"
 #include "Utility.h"
+#include "Pyramid.h"
 
 namespace Papyrus
 {
@@ -21,6 +22,7 @@ namespace Papyrus
 		papyrus->Register(Interface::Register);
 		papyrus->Register(ObjectRef::Register);
 		papyrus->Register(Utility::Register);
+		papyrus->Register(Pyramid::Register);
 
 		logger::info("Registered Papyrus Functions");
 
