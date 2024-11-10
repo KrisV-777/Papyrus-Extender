@@ -92,16 +92,46 @@ target(PROJECT_NAME)
     end
 
     -- Post Build 
-    if has_config("copy_to_papyrus") then
-        after_build(function (target)
-            local folder = os.getenv("XSE_TES5_MODS_PATH")
-            if folder then
-                local SkyrimPath = path.join(folder, target:name(), "SKSE/Plugins")
-                os.cp(target:targetfile(), SkyrimPath)
-                os.cp(target:symbolfile(), SkyrimPath)
-            else
-                print("Warning: SkyrimPath not defined. Skipping post-build copy.")
+    after_build(function (target)
+        local mod_folder = os.getenv("XSE_TES5_MODS_PATH")
+        local game_folder = os.getenv("XSE_TES5_GAME_PATH")
+        if game_folder and mod_folder then
+            local compiler_folder = path.join(game_folder, "Papyrus Compiler/PapyrusCompiler.exe")
+            local script_source = "dist/source/scripts"
+            local script_output = "dist/scripts"
+            local po3_extender = "powerofthree's Papyrus Extender"
+            local flags_file = path.join(game_folder, "Data/Source/Scripts/TESV_Papyrus_Flags.flg")
+            os.execv(compiler_folder, { script_source, 
+                "-i=" .. script_source ..
+                    ";" .. path.join(game_folder, "Data/Source/Scripts") .. 
+                    ";" .. path.join(mod_folder, "powerofthree's Papyrus Extender/Source/Scripts"),
+                "-o=" .. script_output, 
+                "-f=" .. flags_file, 
+                "-optimize", "-all" })
+            local plugin_folder = "dist/SKSE/Plugins"
+            if not os.isdir(plugin_folder) then
+                os.mkdir(plugin_folder)
             end
-        end)
-    end
+            os.cp(target:targetfile(), plugin_folder)
+            os.cp(target:symbolfile(), plugin_folder)
+
+            if (is_mode("release")) then
+                local release_folder = path.join(os.projectdir(), ".release")
+                local zipfile = path.join(release_folder, target:basename() .. "-" .. target:version() .. ".7z")
+                local files = path.join(os.projectdir(), "dist/*")
+                if not os.isdir(release_folder) then
+                    os.mkdir(release_folder)
+                end
+                os.exec("7z a " .. zipfile .. " " .. files)
+            end
+        else
+            print("Warning: GamePath not defined. Skipping script compilation.")
+        end
+        if mod_folder and has_config("copy_to_papyrus") then
+            local SkyrimPath = path.join(mod_folder, target:basename())
+            os.cp("dist/*", SkyrimPath)
+        else
+            print("Warning: SkyrimPath not defined. Skipping post-build copy.")
+        end
+    end)
 target_end()
