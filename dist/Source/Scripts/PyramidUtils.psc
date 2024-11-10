@@ -89,7 +89,7 @@ String Function ConsoleGetAbsPos(Form akRef) global
   String msg = ""
   While (loc)
     msg += loc.GetName() + "\n"
-    Location parLoc = PO3_SKSEFunctions.GetParentLocation(loc)
+    Location parLoc = SPE_Location.GetParentLocation(loc)
     If (parLoc != loc)
       loc = parLoc
     Else

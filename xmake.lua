@@ -102,9 +102,7 @@ target(PROJECT_NAME)
             local po3_extender = "powerofthree's Papyrus Extender"
             local flags_file = path.join(game_folder, "Data/Source/Scripts/TESV_Papyrus_Flags.flg")
             os.execv(compiler_folder, { script_source, 
-                "-i=" .. script_source ..
-                    ";" .. path.join(game_folder, "Data/Source/Scripts") .. 
-                    ";" .. path.join(mod_folder, "powerofthree's Papyrus Extender/Source/Scripts"),
+                "-i=" .. script_source .. ";" .. path.join(game_folder, "Data/Source/Scripts"),
                 "-o=" .. script_output, 
                 "-f=" .. flags_file, 
                 "-optimize", "-all" })
