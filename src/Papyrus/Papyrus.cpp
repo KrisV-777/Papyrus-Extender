@@ -3,9 +3,10 @@
 #include "Actor.h"
 #include "Form.h"
 #include "Interface.h"
+#include "Location.h"
 #include "ObjectRef.h"
-#include "Utility.h"
 #include "Pyramid.h"
+#include "Utility.h"
 
 namespace Papyrus
 {
@@ -23,6 +24,7 @@ namespace Papyrus
 		papyrus->Register(ObjectRef::Register);
 		papyrus->Register(Utility::Register);
 		papyrus->Register(Pyramid::Register);
+		papyrus->Register(Location::Register);
 
 		logger::info("Registered Papyrus Functions");
 
