@@ -100,7 +100,7 @@ namespace Geography
 				const auto xTeleport = a_ref->extraList.GetByType<RE::ExtraTeleport>();
 
 				if (const auto teleportData = xTeleport ? xTeleport->teleportData : nullptr) {
-					logger::info("found teleport data on {}", Util::HexString(a_ref->GetFormID()));
+					logger::info("found teleport data on {:X}", a_ref->GetFormID());
 
 					if (const auto linkedDoorRef = teleportData->linkedDoor) {
 						if (const auto linkedDoorPtr = linkedDoorRef.get()) {
@@ -144,8 +144,8 @@ namespace Geography
 
 			for (const auto& edge : path) {
 				contents += std::format("{}:{}:{}",
-					edge.interior ? Util::HexString(edge.interior->GetFormID()) : "none",
-					edge.exterior ? Util::HexString(edge.exterior->GetFormID()) : "none",
+					edge.interior ? String::HexString(edge.interior->GetFormID()) : "none",
+					edge.exterior ? String::HexString(edge.exterior->GetFormID()) : "none",
 					edge.dist);
 			}
 		}
@@ -201,7 +201,7 @@ namespace Geography
 
 	inline float GetIntExtDistance(const RE::TESObjectREFR* a_interior, const RE::TESObjectREFR* a_exterior)
 	{
-		logger::info("GetIntExtDistance: {} - {}", Util::HexString(a_interior->GetFormID()), Util::HexString(a_exterior->GetFormID()));
+		logger::info("GetIntExtDistance: {:X} - {:X}", a_interior->GetFormID(), a_exterior->GetFormID());
 
 		if (const auto& closestEdge = GetClosestExteriorCellEdge(a_interior)) {
 			const auto& ref1ToDoor = closestEdge->dist;
@@ -216,7 +216,7 @@ namespace Geography
 
 	inline float GetIntIntDistance(const RE::TESObjectREFR* a_interior1, const RE::TESObjectREFR* a_interior2)
 	{
-		logger::info("GetIntIntDistance: {} - {}", Util::HexString(a_interior1->GetFormID()), Util::HexString(a_interior2->GetFormID()));
+		logger::info("GetIntIntDistance: {:X} - {:X}", a_interior1->GetFormID(), a_interior2->GetFormID());
 
 		const auto& paths = TraverseInteriorCellStartingAt(a_interior1->GetParentCell(), 10, a_interior1);
 

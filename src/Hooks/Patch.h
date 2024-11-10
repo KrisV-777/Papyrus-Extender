@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Trampoline.h"
 #include "Handlers/MarkerManager.h"
+#include "Trampoline.h"
 
-namespace Hooks
+namespace Patch
 {
-	void UpdateQuests(void* a_1, void* a_2, RE::NiPoint3* a_pos, const RE::RefHandle& a_refHandle, std::uint32_t a_markerGotoFrame)
+	void UpdateQuests(void*, void*, RE::NiPoint3*, const RE::RefHandle& a_refHandle, std::uint32_t)
 	{
 		const auto marker = RE::TESObjectREFR::LookupByHandle(a_refHandle).get();
 		MarkerManager::SetMarker(marker);

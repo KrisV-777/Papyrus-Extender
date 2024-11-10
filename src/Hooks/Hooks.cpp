@@ -11,16 +11,16 @@ void Hooks::Install()
 	SKSE::AllocTrampoline(64);
 	auto& trampoline = SKSE::GetTrampoline();
 
-	REL::Relocation<std::uintptr_t> det{ RELID(41659, 42742), OFFSET(0x526, 0x67B, 0x67B) };
+	REL::Relocation<std::uintptr_t> det{ REL_ID(41659, 42742), REL_OF(0x526, 0x67B, 0x67B) };
 	_DoDetect = trampoline.write_call<5>(det.address(), DoDetect);
 
 	REL::Relocation<std::uintptr_t> upc{ RE::Character::VTABLE[0] };
 	_UpdateCombat = upc.write_vfunc(0x0E4, UpdateCombat);
 
-	REL::Relocation<std::uintptr_t> amd{ RELID(36359, 37350), OFFSET(0xF0, 0xFB, 0xFB) };
+	REL::Relocation<std::uintptr_t> amd{ REL_ID(36359, 37350), REL_OF(0xF0, 0xFB, 0xFB) };
 	_ApplyMovementDelta = trampoline.write_call<5>(amd.address(), ApplyMovementDelta);
 
-	REL::Relocation<std::uintptr_t> gqm{ RELID(50826, 51691), OFFSET(0xFB, 0x167, 0xFB) };
+	REL::Relocation<std::uintptr_t> gqm{ REL_ID(50826, 51691), REL_OF(0xFB, 0x167, 0xFB) };
 	_GetQuestMarkerRef = trampoline.write_call<5>(gqm.address(), GetQuestMarkerRef);
 
 	HINSTANCE dllHandle = LoadLibrary(TEXT("CompassNavigationOverhaul.dll"));
@@ -29,7 +29,7 @@ void Hooks::Install()
 		Patch::Install();
 	} else {
 		logger::info("installing cno hook");
-		REL::Relocation<std::uintptr_t> udq{ RELID(50826, 51691), OFFSET(0x114, 0x180, 0x114) };
+		REL::Relocation<std::uintptr_t> udq{ REL_ID(50826, 51691), REL_OF(0x114, 0x180, 0x114) };
 		_UpdateQuests = trampoline.write_call<5>(udq.address(), UpdateQuests);
 	}
 }

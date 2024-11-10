@@ -22,18 +22,8 @@ using namespace std::literals;
 #include "Random.h"
 #include "Singleton.h"
 
-#ifdef SKYRIM_SUPPORT_AE
-#define RELID(SE, AE) REL::ID(AE)
-#define OFFSET(SE, AE, VR) AE
-#else
-#ifdef SKYRIMVR
-#define RELID(SE, AE) REL::ID(AE)
-#define OFFSET(SE, AE, VR) VR
-#else
-#define RELID(SE, AE) REL::ID(SE)
-#define OFFSET(SE, AE, VR) SE
-#endif
-#endif
+#define REL_ID(se, ae) REL::RelocationID(se, ae)
+#define REL_OF(se, ae, vr) REL::VariantOffset(se, ae, vr)
 
 namespace stl
 {
@@ -66,4 +56,3 @@ namespace Papyrus
 }
 
 #define DLLEXPORT __declspec(dllexport)
-#include "Plugin.h"

@@ -16,38 +16,17 @@
 // 	}
 // }
 
-#ifdef SKYRIM_SUPPORT_AE
-extern "C" DLLEXPORT constinit auto SKSEPlugin_Version = []() {
-	SKSE::PluginVersionData v;
-	v.PluginVersion(Plugin::VERSION);
-	v.PluginName(Plugin::NAME);
-	v.AuthorName("Scrab Joséline"sv);
-	v.UsesAddressLibrary();
-	v.UsesUpdatedStructs();
-	v.CompatibleVersions({ SKSE::RUNTIME_LATEST });
-	// v.CompatibleVersions({ SKSE::RUNTIME_1_6_353 });
-	return v;
-}();
-#else
-extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface*, SKSE::PluginInfo* a_info)
-{
-	a_info->infoVersion = SKSE::PluginInfo::kVersion;
-	a_info->name = Plugin::NAME.data();
-	a_info->version = Plugin::VERSION.pack();
-	return true;
-}
-#endif
-
 extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
 {
-	const auto InitLogger = []() -> bool {
+	const auto plugin = SKSE::PluginDeclaration::GetSingleton();
+	const auto InitLogger = [&plugin]() -> bool {
 #ifndef NDEBUG
 		auto sink = std::make_shared<spdlog::sinks::msvc_sink_mt>();
 #else
 		auto path = logger::log_directory();
 		if (!path)
 			return false;
-		*path /= std::format("{}.log", Plugin::NAME);
+		*path /= std::format("{}.log", plugin->GetName());
 		auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(path->string(), true);
 #endif
 		auto log = std::make_shared<spdlog::logger>("global log"s, std::move(sink));
@@ -65,7 +44,7 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 		spdlog::set_pattern("[%T] [%^%l%$] %v"s);
 #endif
 
-		logger::info("{} v{}", Plugin::NAME, Plugin::VERSION.string());
+		logger::info("{} v{}", plugin->GetName(), plugin->GetVersion());
 		return true;
 	};
 	if (a_skse->IsEditor()) {
@@ -101,7 +80,7 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 	serialization->SetLoadCallback(Serialize::Load);
 	serialization->SetRevertCallback(Serialize::Revert);
 
-	logger::info("{} loaded", Plugin::NAME);
+	logger::info("{} loaded", plugin->GetName());
 
 	return true;
 }

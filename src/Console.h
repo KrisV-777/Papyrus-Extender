@@ -62,7 +62,7 @@ namespace Registry::Console
 
 	inline void Install()
 	{
-		REL::Relocation<std::uintptr_t> target{ RELOCATION_ID(52065, 52952), OFFSET(0xE2, 0x52, 0x0) };
+		REL::Relocation<std::uintptr_t> target{ REL_ID(52065, 52952), REL_OF(0xE2, 0x52, 0x0) };
 		stl::write_thunk_call<CompileAndRun>(target.address());
 
 		logger::info("Registered Console Integration");

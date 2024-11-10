@@ -22,10 +22,10 @@ namespace hooks
 				struct TrampolineAssembly
 				{
 					// jmp [rip]
-					std::uint8_t jmp;    // 0 - 0xFF
-					std::uint8_t modrm;  // 1 - 0x25
-					std::int32_t disp;   // 2 - 0x00000000
-					std::uint64_t addr;  // 6 - [rip]
+					std::uint8_t jmp;		 // 0 - 0xFF
+					std::uint8_t modrm;	 // 1 - 0x25
+					std::int32_t disp;	 // 2 - 0x00000000
+					std::uint64_t addr;	 // 6 - [rip]
 				};
 #pragma pack(pop)
 
@@ -136,7 +136,7 @@ namespace hooks
 			// search backwards from module base
 			auto moduleBase = reinterpret_cast<std::uintptr_t>(a_module);
 			std::uintptr_t addr = moduleBase;
-			std::uintptr_t maxDisplacement = 0x80000000 - (1024 * 1024 * 128);  // largest 32-bit displacement with 128MB scratch space
+			std::uintptr_t maxDisplacement = 0x80000000 - (1024 * 1024 * 128);	// largest 32-bit displacement with 128MB scratch space
 			std::uintptr_t lowestOKAddress = (moduleBase >= maxDisplacement) ? moduleBase - maxDisplacement : 0;
 			addr--;
 
@@ -170,9 +170,9 @@ namespace hooks
 			}
 
 			inst->set_trampoline(base, a_size,
-				[](void* a_mem, std::size_t) {
-					SKSE::WinAPI::VirtualFree(a_mem, 0, MEM_RELEASE);
-				});
+					[](void* a_mem, std::size_t) {
+						REX::W32::VirtualFree(a_mem, 0, MEM_RELEASE);
+					});
 		}
 	};
 
@@ -180,14 +180,14 @@ namespace hooks
 	{
 	public:
 		template <SKSE::stl::nttp::string str>
-		static std::uintptr_t FindPattern(SKSE::WinAPI::HMODULE a_moduleHandle)
+		static std::uintptr_t FindPattern(REX::W32::HMODULE a_moduleHandle)
 		{
 			MODULEINFO moduleInfo;
 			GetModuleInformation(GetCurrentProcess(), reinterpret_cast<HMODULE>(a_moduleHandle), &moduleInfo, sizeof(MODULEINFO));
 			auto base = reinterpret_cast<std::uintptr_t>(moduleInfo.lpBaseOfDll);
 			std::size_t size = moduleInfo.SizeOfImage;
 
-			std::size_t patternLength = (str.length() + 1) / 3;  // 2/3 useful chars (1 space between byte chars)
+			std::size_t patternLength = (str.length() + 1) / 3;	 // 2/3 useful chars (1 space between byte chars)
 			auto pattern = REL::make_pattern<str>();
 
 			for (std::size_t offset = 0; offset < size - patternLength; offset++) {
