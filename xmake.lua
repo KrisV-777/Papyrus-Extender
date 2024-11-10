@@ -1,13 +1,6 @@
 set_xmakever("2.9.5")
 
 -- Globals
--- To copy the build into the mod directory, create a new path MODS_FOLDER, pointing to the root directory of all mod installations
--- PAPYRUS_ROOT is the root folder name of the project, the remaining options are subdirectories for the respective version compiles
-MODS_FOLDER = os.getenv("MODS_FOLDER")
-PAPYRUS_SE = "1597"
-PAPYRUS_AE = "SKSE/Plugins"
-PAPYRUS_VR = "14vr"
-
 PROJECT_NAME = "ScrabsPapyrusExtender"
 
 -- Project
@@ -42,6 +35,7 @@ if is_mode("debug") then
 elseif is_mode("release") then
     add_defines("NDEBUG")
     set_optimize("fastest")
+    set_symbols("debug")
 end
 
 set_config("skse_xbyak", true)
@@ -100,9 +94,11 @@ target(PROJECT_NAME)
     -- Post Build 
     if has_config("copy_to_papyrus") then
         after_build(function (target)
-            if SkyrimPath then
+            local folder = os.getenv("XSE_TES5_MODS_PATH")
+            if folder then
+                local SkyrimPath = path.join(folder, target:name(), "SKSE/Plugins")
                 os.cp(target:targetfile(), SkyrimPath)
-                os.cp(target:targetfile() .. ".pdb", SkyrimPath)
+                os.cp(target:symbolfile(), SkyrimPath)
             else
                 print("Warning: SkyrimPath not defined. Skipping post-build copy.")
             end
