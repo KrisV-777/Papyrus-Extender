@@ -11,13 +11,19 @@
 #include <unordered_set>
 
 #pragma warning(push)
-#include <spdlog/sinks/msvc_sink.h>
+#ifdef NDEBUG
 #include <spdlog/sinks/basic_file_sink.h>
+#else
+#include <spdlog/sinks/msvc_sink.h>
+#endif
 #pragma warning(pop)
 
 namespace logger = SKSE::log;
 namespace fs = std::filesystem;
 using namespace std::literals;
+
+#include <magic_enum.hpp>
+static_assert(magic_enum::is_magic_enum_supported, "magic_enum is not supported");
 
 #include "Random.h"
 #include "Singleton.h"

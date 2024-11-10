@@ -18,8 +18,7 @@ option_end()
 
 -- Dependencies & Includes
 -- https://github.com/xmake-io/xmake-repo/tree/dev
-add_requires("magic_enum", "nlohmann_json", "directxtk", "rapidcsv", "xbyak", "catch2", "lua", "sol2")
-add_requires("spdlog", { configs = { header_only = false, wchar = true, std_format = true } })
+add_requires("magic_enum", "xbyak", "lua", "sol2")
 
 includes("lib/commonlibsse-ng")
 
@@ -46,8 +45,7 @@ set_config("skse_xbyak", true)
 -- Target
 target(PROJECT_NAME)
     -- Dependencies
-    add_packages("magic_enum", "nlohmann_json", "directxtk", "rapidcsv", "xbyak", "catch2", "clib-util", "detours", "lua", "sol2")
-    add_defines("GLM_ENABLE_EXPERIMENTAL", "XMAKE")
+    add_packages("magic_enum", "xbyak", "lua", "sol2")
 
     -- CommonLibSSE
     add_deps("commonlibsse-ng")
