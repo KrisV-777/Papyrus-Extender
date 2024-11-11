@@ -74,10 +74,10 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 		Hooks::Manager::Install();
 
 	const auto serialization = SKSE::GetSerializationInterface();
-	serialization->SetUniqueID(Serialize::RecordID);
-	serialization->SetSaveCallback(Serialize::Save);
-	serialization->SetLoadCallback(Serialize::Load);
-	serialization->SetRevertCallback(Serialize::Revert);
+	serialization->SetUniqueID(Serialization::Serialize::RecordID);
+	serialization->SetSaveCallback(Serialization::Serialize::Save);
+	serialization->SetLoadCallback(Serialization::Serialize::Load);
+	serialization->SetRevertCallback(Serialization::Serialize::Revert);
 
 	logger::info("{} loaded", plugin->GetName());
 
