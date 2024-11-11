@@ -1,5 +1,7 @@
 #pragma once
 
+namespace PyramidUtils
+{
 	class ActorManager
 	{
 	public:
@@ -84,3 +86,4 @@
 		static inline std::unordered_set<RE::FormID> calmed;
 		static inline std::unordered_set<RE::FormID> disabledCollision;
 	};
+}
