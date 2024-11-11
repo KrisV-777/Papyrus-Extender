@@ -70,9 +70,8 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 	// 	return false;
 	// }
 
-	#ifndef SKYRIMVR
+	if (REL::Module::GetRuntime() != REL::Module::Runtime::VR)
 		Hooks::Install();
-		#endif
 
 	const auto serialization = SKSE::GetSerializationInterface();
 	serialization->SetUniqueID(Serialize::RecordID);
