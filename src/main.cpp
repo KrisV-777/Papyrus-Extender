@@ -71,7 +71,7 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 	// }
 
 	if (REL::Module::GetRuntime() != REL::Module::Runtime::VR)
-		Hooks::Install();
+		Hooks::Manager::Install();
 
 	const auto serialization = SKSE::GetSerializationInterface();
 	serialization->SetUniqueID(Serialize::RecordID);

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Papyrus/ObjectRef.h"
-#include "Utility/String.h"
+#include "Utility/StringUtil.h"
 
 namespace Registry::Console
 {
@@ -50,7 +50,7 @@ namespace Registry::Console
 		static void thunk(RE::Script* a_script, RE::ScriptCompiler* a_compiler, RE::COMPILER_NAME a_name, RE::TESObjectREFR* a_targetRef)
 		{
 			std::string cmd{ a_script->GetCommand() };
-			String::ToLower(cmd);
+			Utility::ToLower(cmd);
 			if (!cmd.starts_with("scrab")) {
 				return func(a_script, a_compiler, a_name, a_targetRef);
 			}
