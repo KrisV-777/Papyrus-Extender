@@ -5,7 +5,7 @@
 
 #include "SKSE/Trampoline.h"
 
-namespace hooks
+namespace Hooks::Trampoline
 {
 	template <std::size_t SrcSize>
 	class Hook

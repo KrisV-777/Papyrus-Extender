@@ -1,9 +1,11 @@
 #pragma once
 
-#include "Handlers/MarkerManager.h"
 #include "Trampoline.h"
+#include "PyramidUtils/MarkerManager.h"
 
-namespace Patch
+using namespace PyramidUtils;
+
+namespace Hooks::Patch
 {
 	void UpdateQuests(void*, void*, RE::NiPoint3*, const RE::RefHandle& a_refHandle, std::uint32_t)
 	{
@@ -25,7 +27,7 @@ namespace Patch
 		return target;
 	}
 
-	struct UpdateQuestsHook : hooks::Hook<5>
+	struct UpdateQuestsHook : Trampoline::Hook<5>
 	{
 		struct HookCodeGenerator : Xbyak::CodeGenerator
 		{
@@ -63,12 +65,10 @@ namespace Patch
 	void Install()
 	{
 		const auto address = REL::RelocationID{ 50826, 51691 }.address() + REL::VariantOffset{ 0x114, 0x180, 0x114 }.offset();
-
 		const auto target = getJmpTarget(address);
 
 		UpdateQuestsHook updateQuestsHook{ address, target };
-
-		static hooks::DefaultTrampoline tramp1{ updateQuestsHook.getSize() };
+		static Trampoline::DefaultTrampoline tramp1{ updateQuestsHook.getSize() };
 		tramp1.write_branch(updateQuestsHook);
 	}
 }
