@@ -1,10 +1,6 @@
 #pragma once
 namespace Papyrus::PyramidUtilsP
 {
-  std::vector<RE::TESForm*> FilterFormsByKeyword(STATICARGS, std::vector<RE::TESForm*> a_forms, std::vector<RE::BGSKeyword*> a_keywords, bool a_matchall, bool a_invert);
-  std::vector<RE::TESForm*> FilterFormsByGoldValue(STATICARGS, std::vector<RE::TESForm*> a_forms, int a_value, bool a_greater, bool a_equal);
-	std::vector<RE::TESForm*> FilterByEquippedSlot(RE::StaticFunctionTag*, std::vector<RE::TESForm*> a_forms, std::vector<int> a_slots, bool a_all);
-
 	// COMEBACK: Idk where to sort this in. Mayhaps split it up into different functions?
   std::vector<RE::TESForm*> FilterByEnchanted(STATICARGS, RE::TESObjectREFR* a_container, std::vector<RE::TESForm*> a_forms, bool a_ench);
 
@@ -33,13 +29,10 @@ namespace Papyrus::PyramidUtilsP
 	{
 		// inv processing
 		REGISTERFUNC(GetItemsByKeyword, "PyramidUtils", true);
-		REGISTERFUNC(FilterFormsByKeyword, "PyramidUtils", true);
-		REGISTERFUNC(FilterFormsByGoldValue, "PyramidUtils", true);
 		REGISTERFUNC(FilterByEnchanted, "PyramidUtils", true);
 		REGISTERFUNC(RemoveForms, "PyramidUtils", true);
 		REGISTERFUNC(GetInventoryNamedObjects, "PyramidUtils", true);
 		REGISTERFUNC(GetTemperFactor, "PyramidUtils", true);
-		REGISTERFUNC(FilterByEquippedSlot, "PyramidUtils", true);
 
 		// forms
 		REGISTERFUNC(FormHasKeyword, "PyramidUtils", true);

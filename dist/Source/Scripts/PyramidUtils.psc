@@ -22,10 +22,23 @@ EndFunction
 
 ; Inventory Processing
 Form[] Function GetItemsByKeyword(ObjectReference akContainer, Keyword[] akKeywords, bool abMatchAll = false) global native
-Form[] Function FilterFormsByKeyword(Form[] akForms, Keyword[] akKeywords, bool abMatchAll = false, bool abInvert = false) global native
-Form[] Function FilterFormsByGoldValue(Form[] akForms, int aiValue, bool abGreaterThan = true, bool abEqual = true) global native
+Form[] Function FilterFormsByKeyword(Form[] akForms, Keyword[] akKeywords, bool abMatchAll = false, bool abInvert = false) global
+  return SPE_Utility.FilterFormsByKeyword(akForms, akKeywords, abMatchAll, abInvert)
+EndFunction
+Form[] Function FilterFormsByGoldValue(Form[] akForms, int aiValue, bool abGreaterThan = true, bool abEqual = true) global
+  return SPE_Utility.FilterFormsByGoldValue(akForms, aiValue, abGreaterThan, abEqual)
+EndFunction
 Form[] Function FilterByEnchanted(ObjectReference akContainer, Form[] akForms, bool abEnchanted = true) global native
-Form[] Function FilterByEquippedSlot(Form[] akForms, int[] aiSlots, bool abAll = false) global native
+Form[] Function FilterByEquippedSlot(Form[] akForms, int[] aiSlots, bool abAll = false) global
+  Armor[] armors = SPE_Utility.FilterBySlot(akForms, aiSlots, abAll)
+  Form[] ret = Utility.CreateFormArray(armors.Length)
+  int i = 0
+  While (i < armors.Length)
+    ret[i] = armors[i]
+    i += 1
+  EndWhile
+  return ret
+EndFunction
 Int Function RemoveForms(ObjectReference akFromCont, Form[] akForms, ObjectReference akToCont = none) global native
 
 ; Form Processing

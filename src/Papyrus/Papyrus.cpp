@@ -23,7 +23,7 @@ namespace Papyrus
 		papyrus->Register(Form::Register);
 		papyrus->Register(Interface::Register);
 		papyrus->Register(ObjectRef::Register);
-		papyrus->Register(Utility::Register);
+		papyrus->Register(Util::Register);
 		papyrus->Register(Location::Register);
 		papyrus->Register(GlobalVariable::Register);
 

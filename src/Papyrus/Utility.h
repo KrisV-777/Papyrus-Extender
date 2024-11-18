@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Papyrus::Utility
+namespace Papyrus::Util
 {
 	namespace Array
 	{
@@ -24,6 +24,11 @@ namespace Papyrus::Utility
 		std::vector<int> FilterArray_Int(RE::StaticFunctionTag*, std::vector<int> arr, std::vector<int> filter);
 		std::vector<float> FilterArray_Float(RE::StaticFunctionTag*, std::vector<float> arr, std::vector<float> filter);
 		std::vector<RE::BSFixedString> FilterArray_String(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, std::vector<RE::BSFixedString> filter);
+
+		std::vector<RE::TESForm*> FilterFormsByKeyword(RE::StaticFunctionTag*, std::vector<RE::TESForm*> a_forms, std::vector<RE::BGSKeyword*> a_keywords, bool a_matchall, bool a_invert);
+		std::vector<RE::TESForm*> FilterFormsByGoldValue(RE::StaticFunctionTag*, std::vector<RE::TESForm*> a_forms, int a_value, bool a_greater, bool a_equal);
+		std::vector<RE::TESObjectARMO*> FilterBySlot(RE::StaticFunctionTag*, std::vector<RE::TESForm*> a_forms, std::vector<int> a_slots, bool a_all);
+		std::vector<RE::TESObjectARMO*> FilterBySlotmask(RE::StaticFunctionTag*, std::vector<RE::TESForm*> a_forms, uint32_t a_slotmask, bool a_all);
 
 		std::vector<int> PushFront_Int(RE::StaticFunctionTag*, std::vector<int> arr, int push);
 		std::vector<float> PushFront_Float(RE::StaticFunctionTag*, std::vector<float> arr, float push);

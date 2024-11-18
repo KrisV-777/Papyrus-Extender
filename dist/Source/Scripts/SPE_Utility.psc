@@ -1,5 +1,15 @@
 ScriptName SPE_Utility Hidden
 
+; Given a list of forms, remove any form that does not contain any of the given keywords
+; if abMatchAll is true, only forms that contain all keywords are returned
+; if abInvert is true, only forms that do not contain any of the keywords are returned
+Form[] Function FilterFormsByKeyword(Form[] akForm, Keyword[] akKeywords, bool abMatchAll, bool abInvert) global native
+; Given a list of forms, remove any form whichs gold value is less than the given threshold (xor greater if abGreater, or equal if abEqual)
+Form[] Function FilterFormsByGoldValue(Form[] akForm, int aiGoldThreshold, bool abGreater, bool abEqual) global native
+; Given a list of forms, remove any which do not use any of the given slots. If abMatchAll is true, only forms that use all slots are returned
+Armor[] Function FilterBySlot(Form[] akForm, int[] aiSlots, bool abMatchAll) global native
+Armor[] Function FilterBySlotmask(Form[] akForm, int aiSlotMask, bool abMatchAll) global native
+
 ; Randomly reorder every element in the array, the array is modified in-place
 Function Shuffle_Int(int[] arr) global native
 Function Shuffle_Float(float[] arr) global native

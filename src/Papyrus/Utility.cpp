@@ -4,7 +4,9 @@
 #include <lua.hpp>
 #include <sol/sol.hpp>
 
-namespace Papyrus::Utility
+#include "Utility/Keywords.h"
+
+namespace Papyrus::Util
 {
 	inline std::optional<sol::state> OpenLua(const std::string& code)
 	{
@@ -132,5 +134,61 @@ namespace Papyrus::Utility
 		std::vector<int> FilterArray_Int(RE::StaticFunctionTag*, std::vector<int> arr, std::vector<int> filter) { return FilterArray(arr, filter); }
 		std::vector<float> FilterArray_Float(RE::StaticFunctionTag*, std::vector<float> arr, std::vector<float> filter) { return FilterArray(arr, filter); }
 		std::vector<RE::BSFixedString> FilterArray_String(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, std::vector<RE::BSFixedString> filter) { return FilterArray(arr, filter); }
-	}
-}
+
+  	std::vector<RE::TESForm*> FilterFormsByKeyword(RE::StaticFunctionTag*, std::vector<RE::TESForm*> a_forms, std::vector<RE::BGSKeyword*> a_keywords, bool a_matchall, bool a_invert)
+		{
+			std::vector<RE::TESForm*> filtered;
+			for (const auto& form : a_forms) {
+				if (!form)
+					continue;
+				if (Utility::HasKeywords(form, a_keywords, a_matchall) != a_invert) {
+					filtered.push_back(form);
+				}
+			}
+			return filtered;
+		}
+
+		std::vector<RE::TESForm*> FilterFormsByGoldValue(RE::StaticFunctionTag*, std::vector<RE::TESForm*> a_forms, int a_value, bool a_greater, bool a_equal)
+		{
+			std::vector<RE::TESForm*> filtered;
+			for (const auto& form : a_forms) {
+				if (!form)
+					continue;
+				const auto cmp = form->GetGoldValue() <=> a_value;
+				if (cmp > 0 && a_greater) {
+					filtered.push_back(form);
+				} else if (cmp < 0 && !a_greater) {
+					filtered.push_back(form);
+				} else if (cmp == 0 && a_equal) {
+					filtered.push_back(form);
+				}
+			}
+			return filtered;
+		}
+
+		std::vector<RE::TESObjectARMO*> FilterBySlot(RE::StaticFunctionTag*, std::vector<RE::TESForm*> a_forms, std::vector<int> a_slots, bool a_all)
+		{
+			const auto slotmask = std::accumulate(a_slots.begin(), a_slots.end(), 0u, [](auto acc, auto b) { return acc | (b - 30); });
+			return FilterBySlotmask(nullptr, a_forms, slotmask, a_all);
+		}
+
+		std::vector<RE::TESObjectARMO*> FilterBySlotmask(RE::StaticFunctionTag*, std::vector<RE::TESForm*> a_forms, uint32_t a_slotmask, bool a_all)
+		{
+			std::vector<RE::TESObjectARMO*> filtered;
+			for (const auto& form : a_forms) {
+				const auto armor = form ? form->As<RE::TESObjectARMO>() : nullptr;
+				if (!armor)
+					continue;
+				const auto slotmask = static_cast<uint32_t>(armor->GetSlotMask());
+				const auto res = slotmask & a_slotmask;
+				if (a_all && res == a_slotmask) {
+					filtered.push_back(armor);
+				} else if (!a_all && res > 0) {
+					filtered.push_back(armor);
+				}
+			}
+			return filtered;
+		}
+
+	}	// namespace Array
+} // namespace Papyrus::Utility
