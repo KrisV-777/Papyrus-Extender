@@ -2,10 +2,9 @@
 
 namespace Serialization
 {
-	template <typename T>
+	template <typename T, typename = std::enable_if_t<std::is_same_v<RE::FormID, typename T::value_type>>>
 	inline void LoadFormIDs(SKSE::SerializationInterface* a_intfc, T& a_set)
 	{
-		static_assert(std::is_same_v<RE::FormID, typename T::value_type>);
 		size_t num;
 		a_intfc->ReadRecordData(num);
 		a_set.clear();
@@ -20,13 +19,12 @@ namespace Serialization
 		}
 	}
 
-	template <typename T>
+	template <typename T, typename = std::enable_if_t<std::is_same_v<RE::FormID, typename T::value_type>>>
 	inline void SaveFormIDs(SKSE::SerializationInterface* a_intfc, const T& a_set)
 	{
-		static_assert(std::is_same_v<RE::FormID, typename T::value_type>);
 		a_intfc->WriteRecordData(a_set.size());
 		for (const auto& value : a_set) {
 			a_intfc->WriteRecordData(value);
 		}
 	}
-} // namespace Serialization
+}	 // namespace Serialization
