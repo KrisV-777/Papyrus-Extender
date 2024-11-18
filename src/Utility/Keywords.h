@@ -2,7 +2,7 @@
 
 namespace Utility
 {
-	bool HasKeywords(RE::TESForm* a_form, std::vector<RE::BGSKeyword*> a_kwds, bool a_matchAll)
+	inline bool HasKeywords(RE::TESForm* a_form, std::vector<RE::BGSKeyword*> a_kwds, bool a_matchAll)
   {
 		auto keywordForm = a_form->As<RE::BGSKeywordForm>();
 		if (!keywordForm) {

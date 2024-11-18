@@ -69,7 +69,7 @@ Armor[] Function GetWornForms(Actor akActor, int aiSlotMask = 0) global native
 ; Same as WornHasKeyword(), but allows to specify multiple keywords
 ; The string variant allows to search for substrings in keywords if abMatchPartial is true
 ; Returns all keywords that are present on any worn form, in case of abMatchPartial = true, returns the first match
-Keyword[] Function WornHasKeywords(Actor akActor, Keywords[] akKeywords) global native
+Keyword[] Function WornHasKeywords(Actor akActor, Keyword[] akKeywords) global native
 Keyword[] Function WornHasKeywordStrings(Actor akActor, String[] asKeywords, bool abMatchPartial) global native
 
 ; Get the players current dialogue target

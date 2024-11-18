@@ -209,7 +209,7 @@ namespace Papyrus::Actor
 		return std::vector<RE::BGSKeyword*>{ worn.begin(), worn.end() };
 	}
 
-  std::vector<RE::BGSKeyword*> WornHasKeywordStrings(STATICARGS, RE::Actor* a_actor, std::vector<std::string> a_kwds, bool a_partialmatch)
+	std::vector<RE::BGSKeyword*> WornHasKeywordStrings(STATICARGS, RE::Actor* a_actor, std::vector<RE::BSFixedString> a_kwds, bool a_partialmatch)
 	{
 		if (!a_actor) {
 			TRACESTACK("Actor is nullptr");
