@@ -24,6 +24,7 @@ includes("lib/commonlibsse-ng")
 
 -- policies
 set_policy("package.requires_lock", true)
+set_policy("check.auto_ignore_flags", false)
 
 -- rules
 add_rules("mode.debug", "mode.release")
