@@ -1,6 +1,6 @@
 #include "Hooks.h"
 
-#include "PyramidUtils/ActorManager.h"
+#include "Data/ActorManager.h"
 #include "PyramidUtils/MarkerManager.h"
 #include "Patch.h"
 
@@ -37,7 +37,7 @@ namespace Hooks {
 
 	void Manager::UpdateCombat(RE::Character* a_this)
 	{
-		if (!ActorManager::IsCalmed(a_this)) {
+		if (!Data::ActorManager::GetSingleton()->IsCalmed(a_this)) {
 			_UpdateCombat(a_this);
 		} else if (a_this->IsInCombat()) {
 			a_this->StopCombat();
@@ -46,18 +46,18 @@ namespace Hooks {
 
 	void Manager::ApplyMovementDelta(RE::Actor* a_actor, float a_delta)
 	{
-		if (!ActorManager::IsCollisionFrozen(a_actor)) {
+		if (!Data::ActorManager::GetSingleton()->IsCollisionFrozen(a_actor)) {
 			_ApplyMovementDelta(a_actor, a_delta);
 		}
 	}
 
 	uint8_t* Manager::DoDetect(RE::Actor* viewer, RE::Actor* target, int32_t& detectval, uint8_t& unk04, uint8_t& unk05, uint32_t& unk06, RE::NiPoint3& pos, float& unk08, float& unk09, float& unk10)
 	{
-		if (viewer && ActorManager::IsCalmed(viewer) || target && ActorManager::IsCalmed(target)) {
+		const auto actManager = Data::ActorManager::GetSingleton();
+		if (viewer && actManager->IsCalmed(viewer) || target && actManager->IsCalmed(target)) {
 			detectval = -1000;
 			return nullptr;
 		}
-
 		return _DoDetect(viewer, target, detectval, unk04, unk05, unk06, pos, unk08, unk09, unk10);
 	}
 
