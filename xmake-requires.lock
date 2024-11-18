@@ -27,6 +27,14 @@
             },
             version = "24.2.0"
         },
+        ["frozen#31fecfc4"] = {
+            repo = {
+                branch = "master",
+                commit = "f6251c012faabeb21d64f50a41e892e56993e77e",
+                url = "https://github.com/xmake-io/xmake-repo.git"
+            },
+            version = "1.2.0"
+        },
         ["lua#31fecfc4"] = {
             repo = {
                 branch = "master",

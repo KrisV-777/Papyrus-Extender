@@ -18,7 +18,7 @@ option_end()
 
 -- Dependencies & Includes
 -- https://github.com/xmake-io/xmake-repo/tree/dev
-add_requires("magic_enum", "xbyak", "lua", "sol2")
+add_requires("magic_enum", "xbyak", "lua", "sol2", "frozen")
 
 includes("lib/commonlibsse-ng")
 
@@ -45,7 +45,7 @@ set_config("skse_xbyak", true)
 -- Target
 target(PROJECT_NAME)
     -- Dependencies
-    add_packages("magic_enum", "xbyak", "lua", "sol2")
+    add_packages("magic_enum", "xbyak", "lua", "sol2", "frozen")
 
     -- CommonLibSSE
     add_deps("commonlibsse-ng")
@@ -93,7 +93,7 @@ target(PROJECT_NAME)
     after_build(function (target)
         local mod_folder = os.getenv("XSE_TES5_MODS_PATH")
         local game_folder = os.getenv("XSE_TES5_GAME_PATH")
-        if game_folder and mod_folder then
+        if game_folder then
             local compiler_folder = path.join(game_folder, "Papyrus Compiler/PapyrusCompiler.exe")
             local script_source = "dist/source/scripts"
             local script_output = "dist/scripts"
