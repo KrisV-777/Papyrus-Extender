@@ -26,12 +26,12 @@ namespace Data
 
 	bool ActorManager::IsCollisionFrozen(RE::Actor* a_actor)
 	{
-		return a_actor && disabledCollision.contains(a_actor->GetFormID());
+		return disabledCollision.contains(a_actor->GetFormID());
 	}
 
 	bool ActorManager::IsCalmed(RE::Actor* a_actor)
 	{
-		return a_actor && calmed.contains(a_actor->GetFormID());
+		return calmed.contains(a_actor->GetFormID());
 	}
 
 	void ActorManager::Save(SKSE::SerializationInterface* a_intfc) const
