@@ -7,6 +7,7 @@
 #include "ObjectRef.h"
 #include "Utility.h"
 #include "PyramidUtils.h"
+#include "GlobalVariable.h"
 
 namespace Papyrus
 {
@@ -24,6 +25,7 @@ namespace Papyrus
 		papyrus->Register(ObjectRef::Register);
 		papyrus->Register(Utility::Register);
 		papyrus->Register(Location::Register);
+		papyrus->Register(GlobalVariable::Register);
 
 		papyrus->Register(PyramidUtilsP::Register);
 

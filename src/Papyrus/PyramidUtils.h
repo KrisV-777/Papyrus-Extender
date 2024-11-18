@@ -8,8 +8,6 @@ namespace Papyrus::PyramidUtilsP
 	// COMEBACK: Idk where to sort this in. Mayhaps split it up into different functions?
   std::vector<RE::TESForm*> FilterByEnchanted(STATICARGS, RE::TESObjectREFR* a_container, std::vector<RE::TESForm*> a_forms, bool a_ench);
 
-	RE::TESGlobal* GetGlobal(RE::StaticFunctionTag*, std::string a_edid);
-
   bool FormHasKeyword(STATICARGS, RE::TESForm* a_form, std::vector<RE::BGSKeyword*> a_kwds, bool a_all);
   bool FormHasKeywordStrings(STATICARGS, RE::TESForm* a_form, std::vector<std::string> a_kwds, bool a_all);
 
@@ -61,9 +59,6 @@ namespace Papyrus::PyramidUtilsP
 		REGISTERFUNC(GetAbsPosX, "PyramidUtils", true);
 		REGISTERFUNC(GetAbsPosY, "PyramidUtils", true);
 		REGISTERFUNC(GetAbsPosZ, "PyramidUtils", true);
-
-		// misc
-		REGISTERFUNC(GetGlobal, "PyramidUtils", true);
 
 		return true;
 	}

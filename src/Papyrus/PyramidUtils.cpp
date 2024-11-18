@@ -4,6 +4,7 @@
 #include "PyramidUtils/Input.h"
 #include "PyramidUtils/MarkerManager.h"
 #include "Utility/StringUtil.h"
+#include "Utility/Keywords.h"
 
 namespace Papyrus::PyramidUtilsP
 {
@@ -18,7 +19,7 @@ namespace Papyrus::PyramidUtilsP
 		for (const auto& [form, data] : inventory) {
 			if (!form->GetPlayable() || form->GetName()[0] == '\0')
 				continue;
-			if (a_keywords.empty() || HasKeywords(form, a_keywords, a_matchall)) {
+			if (a_keywords.empty() || Utility::HasKeywords(form, a_keywords, a_matchall)) {
 				filtered.push_back(form);
 			}
 		}
@@ -33,7 +34,7 @@ namespace Papyrus::PyramidUtilsP
         TRACESTACK("FilterFormsByKeyword: nullptr in forms");
         break;
       }
-			if (HasKeywords(form, a_keywords, a_matchall) != a_invert) {
+			if (Utility::HasKeywords(form, a_keywords, a_matchall) != a_invert) {
 				filtered.push_back(form);
 			}
 		}
@@ -110,18 +111,13 @@ namespace Papyrus::PyramidUtilsP
 		return filtered;
 	}
 
-	RE::TESGlobal* GetGlobal(RE::StaticFunctionTag*, std::string a_edid)
-	{
-		return RE::TESForm::LookupByEditorID<RE::TESGlobal>(a_edid);
-	}
-
 	bool FormHasKeyword(STATICARGS, RE::TESForm* a_form, std::vector<RE::BGSKeyword*> a_kwds, bool a_all)
 	{
     if (!a_form) {
       TRACESTACK("FormHasKeyword: form is nullptr");
       return false;
     }
-		return HasKeywords(a_form, a_kwds, a_all);
+		return Utility::HasKeywords(a_form, a_kwds, a_all);
 	}
 
 	bool FormHasKeywordStrings(STATICARGS, RE::TESForm* a_form, std::vector<std::string> a_kwds, bool a_all)
@@ -137,7 +133,7 @@ namespace Papyrus::PyramidUtilsP
 				kwds.push_back(kwd);
 			}
 		}
-		return HasKeywords(a_form, kwds, a_all);
+		return Utility::HasKeywords(a_form, kwds, a_all);
 	}
 
 	long RemoveForms(STATICARGS, RE::TESObjectREFR* a_fromContainer, std::vector<RE::TESForm*> a_forms, RE::TESObjectREFR* a_toContainer)

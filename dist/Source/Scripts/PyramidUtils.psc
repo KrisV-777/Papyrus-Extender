@@ -87,7 +87,9 @@ float Function GetAbsPosY(ObjectReference akRef) global native
 float Function GetAbsPosZ(ObjectReference akRef) global native
 
 ; misc 
-GlobalVariable Function GetGlobal(String asEditorID) global native
+GlobalVariable Function GetGlobal(String asEditorID) global
+  return SPE_GlobalVariable.GetGlobal(asEditorID)
+EndFunction
 
 ; custom console proxy functions - ignore these
 String Function ConsoleGetAbsPos(Form akRef) global
