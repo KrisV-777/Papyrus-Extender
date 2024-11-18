@@ -65,7 +65,8 @@ Actor[] Function GetDetectedBy(Actor akActor) global native
 ; Get all currently worn forms, optionally filtered by slot mask
 ; aiSlotMask: Sum of slot masks to check. An armor is returned if it occupies any of the specified slots
 ; See Armor.psc or https://ck.uesp.net/wiki/Slot_Masks_-_Armor for a list of masks
-Armor[] Function GetWornForms(Actor akActor, int aiSlotMask = 0) global native
+Form[] Function GetWornForms(Actor akActor) global native
+Armor[] Function GetWornArmor(Actor akActor, int aiSlotMask = 0) global native
 ; Same as WornHasKeyword(), but allows to specify multiple keywords
 ; The string variant allows to search for substrings in keywords if abMatchPartial is true
 ; Returns all keywords that are present on any worn form, in case of abMatchPartial = true, returns the first match

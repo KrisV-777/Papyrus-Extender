@@ -12,7 +12,8 @@ namespace Papyrus::Actor
 	std::vector<RE::Actor*> GetDetectedActors(STATICARGS, RE::Actor* a_actor);
 	std::vector<RE::Actor*> GetDetectedBy(STATICARGS, RE::Actor* a_actor);
 
-	std::vector<RE::TESObjectARMO*> GetWornForms(STATICARGS, RE::Actor* a_actor, uint32_t a_slotmask);
+	std::vector<RE::TESForm*> GetWornForms(STATICARGS, RE::Actor* a_actor);
+	std::vector<RE::TESObjectARMO*> GetWornArmor(STATICARGS, RE::Actor* a_actor, uint32_t a_slotmask);
 	std::vector<RE::BGSKeyword*> WornHasKeywords(STATICARGS, RE::Actor* a_actor, std::vector<RE::BGSKeyword*> a_kwds);
   std::vector<RE::BGSKeyword*> WornHasKeywordStrings(STATICARGS, RE::Actor* a_actor, std::vector<RE::BSFixedString> a_kwds, bool a_partialmatch);
 
@@ -32,6 +33,7 @@ namespace Papyrus::Actor
 		REGISTERFUNC(GetDetectedBy, "SPE_Actor", false);
 
 		REGISTERFUNC(GetWornForms, "SPE_Actor", false);
+		REGISTERFUNC(GetWornArmor, "SPE_Actor", false);
 		REGISTERFUNC(WornHasKeywords, "SPE_Actor", false);
 		REGISTERFUNC(WornHasKeywordStrings, "SPE_Actor", false);
 

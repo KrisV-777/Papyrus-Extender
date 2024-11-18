@@ -153,8 +153,27 @@ namespace Papyrus::Actor
 		}
 		return retval;
 	}
-	
-	std::vector<RE::TESObjectARMO*> GetWornForms(STATICARGS, RE::Actor* a_actor, uint32_t a_slotmask)
+
+	std::vector<RE::TESForm*> GetWornForms(STATICARGS, RE::Actor* a_actor)
+	{
+		if (!a_actor) {
+			TRACESTACK("Actor is null");
+			return {};
+		}
+		std::vector<RE::TESForm*> ret;
+		auto inventory = a_actor->GetInventory([&](RE::TESBoundObject& a_object) {
+			return a_object.GetPlayable() && a_object.GetName()[0] != '\0';
+		});
+		for (const auto& [form, data] : inventory) {
+			if (!data.second->IsWorn()) {
+				continue;
+			}
+			ret.push_back(form);
+		}
+		return ret;
+	}
+
+	std::vector<RE::TESObjectARMO*> GetWornArmor(STATICARGS, RE::Actor* a_actor, uint32_t a_slotmask)
 	{
 		if (!a_actor) {
 			TRACESTACK("Actor is null");
