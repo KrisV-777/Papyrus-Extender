@@ -2,7 +2,7 @@
 #include "Hooks/Hooks.h"
 #include "Interface/CustomMenu.h"
 #include "Papyrus/Papyrus.h"
-#include "Serialize.h"
+#include "Serialization/Serialization.h"
 
 // static void SKSEMessageHandler(SKSE::MessagingInterface::Message* message)
 // {
@@ -74,10 +74,11 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 		Hooks::Manager::Install();
 
 	const auto serialization = SKSE::GetSerializationInterface();
-	serialization->SetUniqueID(Serialization::Serialize::RecordID);
-	serialization->SetSaveCallback(Serialization::Serialize::Save);
-	serialization->SetLoadCallback(Serialization::Serialize::Load);
-	serialization->SetRevertCallback(Serialization::Serialize::Revert);
+	serialization->SetUniqueID(Serialization::RecordID);
+	serialization->SetSaveCallback(Serialization::Serializer::SaveCallback);
+	serialization->SetLoadCallback(Serialization::Serializer::LoadCallback);
+	serialization->SetRevertCallback(Serialization::Serializer::RevertCallback);
+	serialization->SetFormDeleteCallback(Serialization::Serializer::FormDeleteCallback);
 
 	logger::info("{} loaded", plugin->GetName());
 
