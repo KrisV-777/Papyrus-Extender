@@ -25,8 +25,8 @@ using namespace std::literals;
 #include <magic_enum.hpp>
 static_assert(magic_enum::is_magic_enum_supported, "magic_enum is not supported");
 
-#include "Random.h"
-#include "Singleton.h"
+#include "Utility/Random.h"
+#include "Utility/Singleton.h"
 
 #define REL_ID(se, ae) REL::RelocationID(se, ae)
 #define REL_OF(se, ae, vr) REL::VariantOffset(se, ae, vr)
