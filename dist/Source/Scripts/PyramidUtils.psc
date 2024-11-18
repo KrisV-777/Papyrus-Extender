@@ -1,12 +1,24 @@
 Scriptname PyramidUtils Hidden 
 
 ; Actor
-Function SetActorCalmed(Actor akActor, bool abCalmed) global native
-Function SetActorFrozen(Actor akTarget, bool abFrozen) global native
-Actor[] Function GetDetectedBy(Actor akActor) global native
-Keyword[] Function WornHasKeywords(Actor akActor, Keyword[] akKwds) global native
-Keyword[] Function WornHasKeywordStrings(Actor akActor, String[] akKwds) global native
-Function Dismount(Actor akTarget) global native
+Function SetActorCalmed(Actor akActor, bool abCalmed) global
+  return SPE_Actor.SetActorCalmed(akActor, abCalmed)
+EndFunction
+Function SetActorFrozen(Actor akTarget, bool abFrozen) global
+  return SPE_Actor.SetActorFrozen(akTarget, abFrozen)
+EndFunction
+Actor[] Function GetDetectedBy(Actor akActor) global
+  return SPE_Actor.GetDetectedBy(akActor)
+EndFunction
+Keyword[] Function WornHasKeywords(Actor akActor, Keyword[] akKwds) global
+  return SPE_Actor.WornHasKeywords(akActor, akKwds)
+EndFunction
+Keyword[] Function WornHasKeywordStrings(Actor akActor, String[] akKwds) global
+  return SPE_Actor.WornHasKeywordStrings(akActor, akKwds, false)
+EndFunction
+Function Dismount(Actor akTarget) global
+  return SPE_Actor.Dismount(akTarget)
+EndFunction
 
 ; Inventory Processing
 Form[] Function GetItemsByKeyword(ObjectReference akContainer, Keyword[] akKeywords, bool abMatchAll = false) global native
@@ -21,7 +33,9 @@ bool Function FormHasKeyword(Form akItem, Keyword[] akKwds, bool abAll = false) 
 bool Function FormHasKeywordStrings(Form akItem, String[] akKwds, bool abAll = false) global native
 
 ; Player
-Actor Function GetPlayerSpeechTarget() global native
+Actor Function GetPlayerSpeechTarget() global
+  return SPE_Actor.GetPlayerSpeechTarget()
+EndFunction
 
 ; String Processing
 String Function ReplaceAt(String asStr, int aiIndex, String asReplace) global native

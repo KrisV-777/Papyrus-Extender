@@ -1,6 +1,5 @@
 #include "PyramidUtils.h"
 
-#include "PyramidUtils/ActorManager.h"
 #include "PyramidUtils/Geography.h"
 #include "PyramidUtils/Input.h"
 #include "PyramidUtils/MarkerManager.h"
@@ -8,123 +7,6 @@
 
 namespace Papyrus::PyramidUtilsP
 {
-	bool HasKeywords(RE::TESForm* a_form, std::vector<RE::BGSKeyword*> a_kwds, bool a_matchAll)
-	{
-		if (!a_form)
-			return false;
-
-		auto keywordForm = a_form->As<RE::BGSKeywordForm>();
-
-		if (const auto arrowForm = a_form->As<RE::TESAmmo>()) {
-			keywordForm = keywordForm ? keywordForm : arrowForm->AsKeywordForm();
-		}
-
-		if (!keywordForm) {
-			return false;
-		}
-
-		for (const auto& kwd : a_kwds) {
-			if (!kwd) {
-				continue;
-			}
-
-			if (keywordForm->HasKeyword(kwd)) {
-				if (!a_matchAll) {
-					return true;
-				}
-			} else {
-				if (a_matchAll) {
-					return false;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	void SetActorCalmed(STATICARGS, RE::Actor* a_actor, bool a_calmed)
-	{
-    if (!a_actor) {
-      TRACESTACK("SetActorCalmed: actor is nullptr");
-      return;
-    }
-		PyramidUtils::ActorManager::SetActorCalmed(a_actor, a_calmed);
-	}
-
-	void SetActorFrozen(STATICARGS, RE::Actor* a_target, bool a_frozen)
-	{
-    if (!a_target) {
-      TRACESTACK("SetActorFrozen: actor is nullptr");
-      return;
-    }
-		PyramidUtils::ActorManager::SetActorFrozen(a_target, a_frozen);
-	}
-
-	std::vector<RE::Actor*> GetDetectedBy(STATICARGS, RE::Actor* a_target)
-	{
-    if (!a_target) {
-      TRACESTACK("GetDetectedBy: actor is nullptr");
-      return std::vector<RE::Actor*>{};
-    }
-		std::vector<RE::Actor*> detected_by;
-		const auto processLists = RE::ProcessLists::GetSingleton();
-		for (const auto& actorHandle : processLists->highActorHandles) {
-			const auto actorPtr = actorHandle.get();
-			if (const auto actor = actorPtr.get()) {
-				if (actor->RequestDetectionLevel(a_target) > 0) {
-					detected_by.push_back(actor);
-				}
-			}
-		}
-		return detected_by;
-	}
-
-	std::vector<RE::BGSKeyword*> WornHasKeywords(STATICARGS, RE::Actor* a_actor, std::vector<RE::BGSKeyword*> a_kwds)
-	{
-    if (!a_actor) {
-      TRACESTACK("WornHasKeywords: actor is nullptr");
-      return std::vector<RE::BGSKeyword*>{};
-    }
-		std::unordered_set<RE::BGSKeyword*> worn;
-		const auto inv = a_actor->GetInventory([](RE::TESBoundObject& a_object) {
-			return a_object.IsArmor();
-		});
-		for (const auto& [item, invData] : inv) {
-			const auto& [count, entry] = invData;
-			if (count > 0 && entry->IsWorn()) {
-				for (const auto& kwd : a_kwds) {
-					if (item->HasKeywordInArray(std::vector<RE::BGSKeyword*>{ kwd }, true)) {
-						worn.insert(kwd);
-					}
-				}
-			}
-		}
-		return std::vector<RE::BGSKeyword*>{ worn.begin(), worn.end() };
-	}
-
-	std::vector<RE::BGSKeyword*> WornHasKeywordStrings(STATICARGS, RE::Actor* a_actor, std::vector<std::string> a_kwds)
-	{
-    if (!a_actor) {
-      TRACESTACK("WornHasKeywordStrings: actor is nullptr");
-      return std::vector<RE::BGSKeyword*>{};
-    }
-		std::unordered_set<RE::BGSKeyword*> worn;
-		const auto inv = a_actor->GetInventory([](RE::TESBoundObject& a_object) {
-			return a_object.IsArmor();
-		});
-		for (const auto& [item, invData] : inv) {
-			const auto& [count, entry] = invData;
-			if (count > 0 && entry->IsWorn()) {
-				for (const auto& kwd : a_kwds) {
-					if (item->HasKeywordByEditorID(kwd)) {
-						worn.insert(RE::TESForm::LookupByEditorID<RE::BGSKeyword>(kwd));
-					}
-				}
-			}
-		}
-		return std::vector<RE::BGSKeyword*>{ worn.begin(), worn.end() };
-	}
-
 	std::vector<RE::TESForm*> GetItemsByKeyword(STATICARGS, RE::TESObjectREFR* a_container, std::vector<RE::BGSKeyword*> a_keywords, bool a_matchall)
 	{
     if (!a_container) {
@@ -286,18 +168,6 @@ namespace Papyrus::PyramidUtilsP
 		return totalRemoved;
 	}
 
-	RE::Actor* GetPlayerSpeechTarget(RE::StaticFunctionTag*)
-	{
-		if (auto speakerObjPtr = RE::MenuTopicManager::GetSingleton()->speaker) {
-			if (auto speakerPtr = speakerObjPtr.get()) {
-				if (auto speaker = speakerPtr.get()) {
-					return speaker->As<RE::Actor>();
-				}
-			}
-		}
-		return nullptr;
-	}
-
 	std::string GetButtonForDXScanCode(RE::StaticFunctionTag*, int a_keyCode)
 	{
 		return PyramidUtils::Input::GetButtonForDXScanCode(a_keyCode);
@@ -366,19 +236,6 @@ namespace Papyrus::PyramidUtilsP
 			}
 		}
 		return refrs;
-	}
-
-	void Dismount(STATICARGS, RE::Actor* a_actor)
-	{
-    if (!a_actor) {
-      TRACESTACK("Dismount: actor is nullptr");
-      return;
-    }
-		// source: BTPS (https://gitlab.com/Shrimperator/skyrim-mod-betterthirdpersonselection)
-		typedef __int64(__fastcall DismountActor_func)(RE::Actor*);
-		static auto DismountActor = RELOCATION_ID(36882, 37906);
-		static auto dismount = REL::Relocation<DismountActor_func>{ DismountActor };
-		dismount(a_actor);
 	}
 
 	float GetTemperFactor(STATICARGS, RE::TESObjectREFR* a_container, RE::TESForm* a_form)
