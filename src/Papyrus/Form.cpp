@@ -1,4 +1,5 @@
 #include "Form.h"
+#include <Utility/Keywords.h>
 
 namespace Papyrus::Form
 {
@@ -99,6 +100,36 @@ namespace Papyrus::Form
 			return ret;
 		};
 		return flatten(a_list);
+	}
+
+	bool FormHasKeywords(STATICARGS, RE::TESForm* a_form, std::vector<RE::BGSKeyword*> a_kwds, bool a_all)
+	{
+		if (!a_form) {
+			TRACESTACK("Form is null");
+			return false;
+		}
+		return Utility::HasKeywords(a_form, a_kwds, a_all);
+	}
+
+	bool FormHasKeywordStrings(STATICARGS, RE::TESForm* a_form, std::vector<std::string> a_kwds, bool a_all, bool a_partialmatch)
+	{
+    if (!a_form) {
+      TRACESTACK("FormHasKeywordStrings: form is nullptr");
+      return false;
+    }
+		const auto kwdForm = a_form->As<RE::BGSKeywordForm>();
+		if (!kwdForm) {
+			return false;
+		}
+		for (const auto& kwdStr : a_kwds) {
+			bool contained = a_partialmatch ? kwdForm->ContainsKeywordString(kwdStr) : kwdForm->HasKeywordString(kwdStr);
+			if (contained && !a_all) {
+				return true;
+			} else if (!contained && a_all) {
+				return false;
+			}
+		}
+		return a_all;
 	}
 
 }	 // namespace Papyrus::Form

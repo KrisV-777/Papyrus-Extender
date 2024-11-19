@@ -5,11 +5,6 @@ namespace Papyrus::PyramidUtilsP
 	// COMEBACK: Idk where to sort this in. Mayhaps split it up into different functions?
   std::vector<RE::TESForm*> FilterByEnchanted(STATICARGS, RE::TESObjectREFR* a_container, std::vector<RE::TESForm*> a_forms, bool a_ench);
 
-  bool FormHasKeyword(STATICARGS, RE::TESForm* a_form, std::vector<RE::BGSKeyword*> a_kwds, bool a_all);
-  bool FormHasKeywordStrings(STATICARGS, RE::TESForm* a_form, std::vector<std::string> a_kwds, bool a_all);
-
-	RE::TESObjectREFR* GetQuestMarker(STATICARGS, RE::TESQuest* a_quest);
-
   std::vector<RE::TESWorldSpace*> GetExteriorWorldSpaces(STATICARGS, RE::TESObjectCELL* a_cell);
   std::vector<RE::BGSLocation*> GetExteriorLocations(STATICARGS, RE::TESObjectCELL* a_cell);
   std::vector<RE::TESForm*> GetInventoryNamedObjects(STATICARGS, RE::TESObjectREFR* a_container, std::vector<std::string> itemNames);
@@ -30,10 +25,6 @@ namespace Papyrus::PyramidUtilsP
 		REGISTERFUNC(RemoveForms, "PyramidUtils", true);
 		REGISTERFUNC(GetInventoryNamedObjects, "PyramidUtils", true);
 		REGISTERFUNC(GetTemperFactor, "PyramidUtils", true);
-
-		// forms
-		REGISTERFUNC(FormHasKeyword, "PyramidUtils", true);
-		REGISTERFUNC(FormHasKeywordStrings, "PyramidUtils", true);
 
 		// geography
 		REGISTERFUNC(GetQuestMarker, "PyramidUtils", true);

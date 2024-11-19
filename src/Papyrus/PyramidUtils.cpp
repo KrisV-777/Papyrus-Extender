@@ -44,32 +44,6 @@ namespace Papyrus::PyramidUtilsP
 		return filtered;
 	}
 
-
-	bool FormHasKeyword(STATICARGS, RE::TESForm* a_form, std::vector<RE::BGSKeyword*> a_kwds, bool a_all)
-	{
-    if (!a_form) {
-      TRACESTACK("FormHasKeyword: form is nullptr");
-      return false;
-    }
-		return Utility::HasKeywords(a_form, a_kwds, a_all);
-	}
-
-	bool FormHasKeywordStrings(STATICARGS, RE::TESForm* a_form, std::vector<std::string> a_kwds, bool a_all)
-	{
-    if (!a_form) {
-      TRACESTACK("FormHasKeywordStrings: form is nullptr");
-      return false;
-    }
-		std::vector<RE::BGSKeyword*> kwds;
-		kwds.reserve(a_kwds.size());
-		for (const auto& kwdStr : a_kwds) {
-			if (const auto kwd = RE::TESForm::LookupByEditorID<RE::BGSKeyword>(kwdStr)) {
-				kwds.push_back(kwd);
-			}
-		}
-		return Utility::HasKeywords(a_form, kwds, a_all);
-	}
-
 	long RemoveForms(STATICARGS, RE::TESObjectREFR* a_fromContainer, std::vector<RE::TESForm*> a_forms, RE::TESObjectREFR* a_toContainer)
 	{
     if (!a_fromContainer) {

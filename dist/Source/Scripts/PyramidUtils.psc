@@ -42,8 +42,12 @@ EndFunction
 Int Function RemoveForms(ObjectReference akFromCont, Form[] akForms, ObjectReference akToCont = none) global native
 
 ; Form Processing
-bool Function FormHasKeyword(Form akItem, Keyword[] akKwds, bool abAll = false) global native
-bool Function FormHasKeywordStrings(Form akItem, String[] akKwds, bool abAll = false) global native
+bool Function FormHasKeyword(Form akItem, Keyword[] akKwds, bool abAll = false) global
+  return SPE_Form.FormHasKeywords(akItem, akKwds, abAll)
+EndFunction
+bool Function FormHasKeywordStrings(Form akItem, String[] akKwds, bool abAll = false) global
+  return SPE_Form.FormHasKeywordStrings(akItem, akKwds, abAll, false)
+EndFunction
 
 ; Player
 Actor Function GetPlayerSpeechTarget() global
