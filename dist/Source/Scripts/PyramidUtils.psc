@@ -93,7 +93,9 @@ Form[] Function GetInventoryNamedObjects(ObjectReference akContainer, String[] a
 float Function GetTemperFactor(ObjectReference akContainer, Form akItem) global native
 
 ; geography
-ObjectReference Function GetQuestMarker(Quest akQuest) global native
+ObjectReference Function GetQuestMarker(Quest akQuest) global
+  return SPE_Quest.GetQuestMarker(akQuest)
+EndFunction
 
 ; if cell is exterior gets worldspace like normal, if interior looks for external doors and their worldspace
 WorldSpace[] Function GetExteriorWorldSpaces(Cell akCell) global native

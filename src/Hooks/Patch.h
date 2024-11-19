@@ -1,16 +1,14 @@
 #pragma once
 
 #include "Trampoline.h"
-#include "PyramidUtils/MarkerManager.h"
-
-using namespace PyramidUtils;
+#include "Data/QuestMarker.h"
 
 namespace Hooks::Patch
 {
 	void UpdateQuests(void*, void*, RE::NiPoint3*, const RE::RefHandle& a_refHandle, std::uint32_t)
 	{
 		const auto marker = RE::TESObjectREFR::LookupByHandle(a_refHandle).get();
-		MarkerManager::SetMarker(marker);
+		Data::QuestMarkerData::SetMarker(marker);
 	}
 
 	std::uintptr_t getJmpTarget(std::uintptr_t a_addr)

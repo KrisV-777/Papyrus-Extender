@@ -1,7 +1,6 @@
 #include "PyramidUtils.h"
 
 #include "PyramidUtils/Geography.h"
-#include "PyramidUtils/MarkerManager.h"
 #include "Utility/StringUtil.h"
 #include "Utility/Keywords.h"
 
@@ -70,15 +69,6 @@ namespace Papyrus::PyramidUtilsP
 			}
 		}
 		return totalRemoved;
-	}
-
-	RE::TESObjectREFR* GetQuestMarker(STATICARGS, RE::TESQuest* a_quest)
-	{
-    if (!a_quest) {
-      TRACESTACK("GetQuestMarker: quest is nullptr");
-      return nullptr;
-    }
-		return PyramidUtils::MarkerManager::GetQuestMarker(a_quest);
 	}
 
 	std::vector<RE::TESWorldSpace*> GetExteriorWorldSpaces(STATICARGS, RE::TESObjectCELL* a_cell)

@@ -1,7 +1,7 @@
 #include "Hooks.h"
 
 #include "Data/ActorManager.h"
-#include "PyramidUtils/MarkerManager.h"
+#include "Data/QuestMarker.h"
 #include "Patch.h"
 
 namespace Hooks {
@@ -63,14 +63,14 @@ namespace Hooks {
 
 	RE::RefHandle Manager::GetQuestMarkerRef(int64_t a_1, int64_t a_2, RE::TESQuest* a_3)
 	{
-		MarkerManager::SetQuest(a_3);
+		Data::QuestMarkerData::SetQuest(a_3);
 		return _GetQuestMarkerRef(a_1, a_2, a_3);
 	}
 
 	bool Manager::UpdateQuests(void* a_1, void* a_2, RE::NiPoint3* a_3, const RE::RefHandle& a_refHandle, std::int32_t a_5)
 	{
 		const auto marker = RE::TESObjectREFR::LookupByHandle(a_refHandle).get();
-		MarkerManager::SetMarker(marker);
+		Data::QuestMarkerData::SetMarker(marker);
 		return _UpdateQuests(a_1, a_2, a_3, a_refHandle, a_5);
 	}
 }

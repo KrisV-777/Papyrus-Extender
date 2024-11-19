@@ -2,12 +2,13 @@
 
 #include "Actor.h"
 #include "Form.h"
+#include "GlobalVariable.h"
 #include "Interface.h"
 #include "Location.h"
 #include "ObjectRef.h"
-#include "Utility.h"
 #include "PyramidUtils.h"
-#include "GlobalVariable.h"
+#include "Quest.h"
+#include "Utility.h"
 
 namespace Papyrus
 {
@@ -21,11 +22,12 @@ namespace Papyrus
 
 		papyrus->Register(Actor::Register);
 		papyrus->Register(Form::Register);
-		papyrus->Register(Interface::Register);
-		papyrus->Register(ObjectRef::Register);
-		papyrus->Register(Util::Register);
-		papyrus->Register(Location::Register);
 		papyrus->Register(GlobalVariable::Register);
+		papyrus->Register(Interface::Register);
+		papyrus->Register(Location::Register);
+		papyrus->Register(ObjectRef::Register);
+		papyrus->Register(Quest::Register);
+		papyrus->Register(Util::Register);
 
 		papyrus->Register(PyramidUtilsP::Register);
 

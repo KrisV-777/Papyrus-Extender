@@ -27,7 +27,6 @@ namespace Papyrus::PyramidUtilsP
 		REGISTERFUNC(GetTemperFactor, "PyramidUtils", true);
 
 		// geography
-		REGISTERFUNC(GetQuestMarker, "PyramidUtils", true);
 		REGISTERFUNC(GetExteriorWorldSpaces, "PyramidUtils", true);
 		REGISTERFUNC(GetExteriorLocations, "PyramidUtils", true);
 		REGISTERFUNC(GetTravelDistance, "PyramidUtils", true);
