@@ -24,6 +24,11 @@ namespace Papyrus::Util
 		std::vector<int> FilterArray_Int(RE::StaticFunctionTag*, std::vector<int> arr, std::vector<int> filter);
 		std::vector<float> FilterArray_Float(RE::StaticFunctionTag*, std::vector<float> arr, std::vector<float> filter);
 		std::vector<RE::BSFixedString> FilterArray_String(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, std::vector<RE::BSFixedString> filter);
+		
+		std::vector<RE::TESForm*> IntersectArray_Form(RE::StaticFunctionTag*, std::vector<RE::TESForm*> arr, std::vector<RE::TESForm*> filter);
+		std::vector<int> IntersectArray_Int(RE::StaticFunctionTag*, std::vector<int> arr, std::vector<int> filter);
+		std::vector<float> IntersectArray_Float(RE::StaticFunctionTag*, std::vector<float> arr, std::vector<float> filter);
+		std::vector<RE::BSFixedString> IntersectArray_String(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, std::vector<RE::BSFixedString> filter);
 
 		std::vector<RE::TESForm*> FilterFormsByKeyword(RE::StaticFunctionTag*, std::vector<RE::TESForm*> a_forms, std::vector<RE::BGSKeyword*> a_keywords, bool a_matchall, bool a_invert);
 		std::vector<RE::TESForm*> FilterFormsByGoldValue(RE::StaticFunctionTag*, std::vector<RE::TESForm*> a_forms, int a_value, bool a_greater, bool a_equal);
@@ -56,6 +61,11 @@ namespace Papyrus::Util
 			REGISTERFUNC(FilterArray_Int, "SPE_Utility", false);
 			REGISTERFUNC(FilterArray_Float, "SPE_Utility", false);
 			REGISTERFUNC(FilterArray_String, "SPE_Utility", false);
+
+			REGISTERFUNC(IntersectArray_Form, "SPE_Utility", false);
+			REGISTERFUNC(IntersectArray_Int, "SPE_Utility", false);
+			REGISTERFUNC(IntersectArray_Float, "SPE_Utility", false);
+			REGISTERFUNC(IntersectArray_String, "SPE_Utility", false);
 
 			REGISTERFUNC(PushFront_Int, "SPE_Utility", false);
 			REGISTERFUNC(PushFront_Float, "SPE_Utility", false);

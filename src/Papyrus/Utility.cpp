@@ -133,7 +133,20 @@ namespace Papyrus::Util
 		std::vector<RE::TESForm*> FilterArray_Form(RE::StaticFunctionTag*, std::vector<RE::TESForm*> arr, std::vector<RE::TESForm*> filter) { return FilterArray(arr, filter); }
 		std::vector<int> FilterArray_Int(RE::StaticFunctionTag*, std::vector<int> arr, std::vector<int> filter) { return FilterArray(arr, filter); }
 		std::vector<float> FilterArray_Float(RE::StaticFunctionTag*, std::vector<float> arr, std::vector<float> filter) { return FilterArray(arr, filter); }
-		std::vector<RE::BSFixedString> FilterArray_String(RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, std::vector<RE::BSFixedString> filter) { return FilterArray(arr, filter); }
+		std::vector<RE::BSFixedString> FilterArray_String(
+			RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, std::vector<RE::BSFixedString> filter) { return FilterArray(arr, filter); }
+
+		template <typename T>
+		T IntersectArray(T& arr, T& arr2)
+		{
+			std::erase_if(arr, [&](auto it) { return !std::ranges::contains(arr2, it); });
+			return arr;
+		}
+		std::vector<RE::TESForm*> IntersectArray_Form(RE::StaticFunctionTag*, std::vector<RE::TESForm*> arr, std::vector<RE::TESForm*> filter) { return IntersectArray(arr, filter); }
+		std::vector<int> IntersectArray_Int(RE::StaticFunctionTag*, std::vector<int> arr, std::vector<int> filter) { return IntersectArray(arr, filter); }
+		std::vector<float> IntersectArray_Float(RE::StaticFunctionTag*, std::vector<float> arr, std::vector<float> filter) { return IntersectArray(arr, filter); }
+		std::vector<RE::BSFixedString> IntersectArray_String(
+			RE::StaticFunctionTag*, std::vector<RE::BSFixedString> arr, std::vector<RE::BSFixedString> filter) { return IntersectArray(arr, filter); }
 
   	std::vector<RE::TESForm*> FilterFormsByKeyword(RE::StaticFunctionTag*, std::vector<RE::TESForm*> a_forms, std::vector<RE::BGSKeyword*> a_keywords, bool a_matchall, bool a_invert)
 		{

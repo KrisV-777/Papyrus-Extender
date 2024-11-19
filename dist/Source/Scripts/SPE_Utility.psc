@@ -2,13 +2,13 @@ ScriptName SPE_Utility Hidden
 
 ; ---------------------- Array functions ----------------------
 
-; Given a list of forms, remove any form that does not contain any of the given keywords
+; Remove any form that does not contain any of the given keywords
 ; if abMatchAll is true, only forms that contain all keywords are returned
 ; if abInvert is true, only forms that do not contain any of the keywords are returned
 Form[] Function FilterFormsByKeyword(Form[] akForm, Keyword[] akKeywords, bool abMatchAll, bool abInvert) global native
-; Given a list of forms, remove any form whichs gold value is less than the given threshold (xor greater if abGreater, or equal if abEqual)
+; Remove any form whichs gold value is less than the given threshold (xor greater if abGreater, or equal if abEqual)
 Form[] Function FilterFormsByGoldValue(Form[] akForm, int aiGoldThreshold, bool abGreater, bool abEqual) global native
-; Given a list of forms, remove any which do not use any of the given slots. If abMatchAll is true, only forms that use all slots are returned
+; Remove any which do not use any of the given slots. If abMatchAll is true, only forms that use all slots are returned
 Armor[] Function FilterBySlot(Form[] akForm, int[] aiSlots, bool abMatchAll) global native
 Armor[] Function FilterBySlotmask(Form[] akForm, int aiSlotMask, bool abMatchAll) global native
 
@@ -44,6 +44,12 @@ Form[] Function FilterArray_Form(Form[] arr, Form[] filter) native global
 int[] Function FilterArray_Int(int[] arr, int[] filter) native global
 float[] Function FilterArray_Float(float[] arr, float[] filter) native global
 String[] Function FilterArray_String(String[] arr, String[] filter) native global
+
+; Return the intersection of arr and arr2
+Form[] Function IntersectArray_Form(Form[] arr, Form[] arr2) native global
+int[] Function IntersectArray_Int(int[] arr, int[] arr2) native global
+float[] Function IntersectArray_Float(float[] arr, float[] arr2) native global
+String[] Function IntersectArray_String(String[] arr, String[] arr2) native global
 
 ; Create a new array [push, arr[0], arr[1], ..., arr[N-1]]
 int[] Function PushFront_Int(int[] arr, int push) global native
