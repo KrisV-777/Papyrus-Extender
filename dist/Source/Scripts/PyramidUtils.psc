@@ -1,4 +1,7 @@
 Scriptname PyramidUtils Hidden 
+{
+  Legacy Script for compatibility. All functions here have been moved into corresponding SPE_ scripts
+}
 
 ; Actor
 Function SetActorCalmed(Actor akActor, bool abCalmed) global

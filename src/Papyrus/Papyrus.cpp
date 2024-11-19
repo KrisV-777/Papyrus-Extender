@@ -7,7 +7,6 @@
 #include "Interface.h"
 #include "Location.h"
 #include "ObjectRef.h"
-#include "PyramidUtils.h"
 #include "Quest.h"
 #include "Utility.h"
 
@@ -30,8 +29,6 @@ namespace Papyrus
 		papyrus->Register(ObjectRef::Register);
 		papyrus->Register(Quest::Register);
 		papyrus->Register(Util::Register);
-
-		papyrus->Register(PyramidUtilsP::Register);
 
 		logger::info("Registered Papyrus Functions");
 
