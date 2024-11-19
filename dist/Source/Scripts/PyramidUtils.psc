@@ -21,14 +21,23 @@ Function Dismount(Actor akTarget) global
 EndFunction
 
 ; Inventory Processing
-Form[] Function GetItemsByKeyword(ObjectReference akContainer, Keyword[] akKeywords, bool abMatchAll = false) global native
+Form[] Function GetItemsByKeyword(ObjectReference akContainer, Keyword[] akKeywords, bool abMatchAll = false) global
+  return SPE_ObjectRef.GetItemsByKeyword(akContainer, akKeywords, abMatchAll)
+EndFunction
 Form[] Function FilterFormsByKeyword(Form[] akForms, Keyword[] akKeywords, bool abMatchAll = false, bool abInvert = false) global
   return SPE_Utility.FilterFormsByKeyword(akForms, akKeywords, abMatchAll, abInvert)
 EndFunction
 Form[] Function FilterFormsByGoldValue(Form[] akForms, int aiValue, bool abGreaterThan = true, bool abEqual = true) global
   return SPE_Utility.FilterFormsByGoldValue(akForms, aiValue, abGreaterThan, abEqual)
 EndFunction
-Form[] Function FilterByEnchanted(ObjectReference akContainer, Form[] akForms, bool abEnchanted = true) global native
+Form[] Function FilterByEnchanted(ObjectReference akContainer, Form[] akForms, bool abEnchanted = true) global
+  Form[] itms = SPE_ObjectRef.GetEnchantedItems(akContainer, true, true, false)
+  If (abEnchanted)
+    return SPE_Utility.IntersectArray_Form(akForms, itms)
+  Else
+    return SPE_Utility.FilterArray_Form(akForms, itms)
+  EndIf
+EndFunction
 Form[] Function FilterByEquippedSlot(Form[] akForms, int[] aiSlots, bool abAll = false) global
   Armor[] armors = SPE_Utility.FilterBySlot(akForms, aiSlots, abAll)
   Form[] ret = Utility.CreateFormArray(armors.Length)
@@ -39,7 +48,9 @@ Form[] Function FilterByEquippedSlot(Form[] akForms, int[] aiSlots, bool abAll =
   EndWhile
   return ret
 EndFunction
-Int Function RemoveForms(ObjectReference akFromCont, Form[] akForms, ObjectReference akToCont = none) global native
+Int Function RemoveForms(ObjectReference akFromCont, Form[] akForms, ObjectReference akToCont = none) global
+  return SPE_ObjectRef.RemoveItems(akFromCont, akForms, akToCont)
+EndFunction
 
 ; Form Processing
 bool Function FormHasKeyword(Form akItem, Keyword[] akKwds, bool abAll = false) global
@@ -87,10 +98,14 @@ Function RegisterForAllAlphaNumericKeys(Form akForm) global
   EndWhile
 EndFunction
 
-Form[] Function GetInventoryNamedObjects(ObjectReference akContainer, String[] asNames) global native
+Form[] Function GetInventoryNamedObjects(ObjectReference akContainer, String[] asNames) global
+  return SPE_ObjectRef.GetInventoryNamedObjects(akContainer, asNames)
+EndFunction
 
 ; unlike ObjecReference.GetItemHealthPercent, this will work on items in a container (range: 0.0-1.6)
-float Function GetTemperFactor(ObjectReference akContainer, Form akItem) global native
+float Function GetTemperFactor(ObjectReference akContainer, Form akItem) global
+  return SPE_ObjectRef.GetTemperFactor(akContainer, akItem)
+EndFunction
 
 ; geography
 ObjectReference Function GetQuestMarker(Quest akQuest) global
@@ -106,12 +121,20 @@ Location[] Function GetExteriorLocations(Cell akCell) global
 EndFunction
 
 ; unlike GetDistance this works even when one or both refs are in an interior or another cell
-float Function GetTravelDistance(ObjectReference akRef1, ObjectReference akRef2) global native
+float Function GetTravelDistance(ObjectReference akRef1, ObjectReference akRef2) global
+  return SPE_ObjectRef.GetTravelDistance(akRef1, akRef2)
+EndFunction
 
 ; uses worldspace offsets to get absolute position on external refs
-float Function GetAbsPosX(ObjectReference akRef) global native
-float Function GetAbsPosY(ObjectReference akRef) global native
-float Function GetAbsPosZ(ObjectReference akRef) global native
+float Function GetAbsPosX(ObjectReference akRef) global
+  return SPE_ObjectRef.GetAbsPosX(akRef)
+EndFunction
+float Function GetAbsPosY(ObjectReference akRef) global
+  return SPE_ObjectRef.GetAbsPosY(akRef)
+EndFunction
+float Function GetAbsPosZ(ObjectReference akRef) global
+  return SPE_ObjectRef.GetAbsPosZ(akRef)
+EndFunction
 
 ; misc 
 GlobalVariable Function GetGlobal(String asEditorID) global
