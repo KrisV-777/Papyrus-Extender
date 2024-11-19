@@ -1,6 +1,7 @@
 #include "Papyrus.h"
 
 #include "Actor.h"
+#include "Cell.h"
 #include "Form.h"
 #include "GlobalVariable.h"
 #include "Interface.h"
@@ -21,6 +22,7 @@ namespace Papyrus
 		}
 
 		papyrus->Register(Actor::Register);
+		papyrus->Register(Cell::Register);
 		papyrus->Register(Form::Register);
 		papyrus->Register(GlobalVariable::Register);
 		papyrus->Register(Interface::Register);

@@ -98,8 +98,12 @@ ObjectReference Function GetQuestMarker(Quest akQuest) global
 EndFunction
 
 ; if cell is exterior gets worldspace like normal, if interior looks for external doors and their worldspace
-WorldSpace[] Function GetExteriorWorldSpaces(Cell akCell) global native
-Location[] Function GetExteriorLocations(Cell akCell) global native
+WorldSpace[] Function GetExteriorWorldSpaces(Cell akCell) global
+  return SPE_Cell.GetExteriorWorldSpaces(akCell)
+EndFunction
+Location[] Function GetExteriorLocations(Cell akCell) global
+  return SPE_Cell.GetExteriorLocations(akCell)
+EndFunction
 
 ; unlike GetDistance this works even when one or both refs are in an interior or another cell
 float Function GetTravelDistance(ObjectReference akRef1, ObjectReference akRef2) global native

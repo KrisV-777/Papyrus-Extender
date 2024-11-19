@@ -1,6 +1,6 @@
 #include "PyramidUtils.h"
 
-#include "PyramidUtils/Geography.h"
+#include "Utility/Geography.h"
 #include "Utility/StringUtil.h"
 #include "Utility/Keywords.h"
 
@@ -69,28 +69,6 @@ namespace Papyrus::PyramidUtilsP
 			}
 		}
 		return totalRemoved;
-	}
-
-	std::vector<RE::TESWorldSpace*> GetExteriorWorldSpaces(STATICARGS, RE::TESObjectCELL* a_cell)
-	{
-    if (!a_cell) {
-      TRACESTACK("GetExteriorWorldSpaces: cell is nullptr");
-      return std::vector<RE::TESWorldSpace*>{};
-    }
-		return Geography::GetWorldSpaces(a_cell);
-	}
-
-	std::vector<RE::BGSLocation*> GetExteriorLocations(STATICARGS, RE::TESObjectCELL* a_cell)
-	{
-    if (!a_cell) {
-      TRACESTACK("GetExteriorLocations: cell is nullptr");
-      return std::vector<RE::BGSLocation*>{};
-    }
-		std::vector<RE::BGSLocation*> locs;
-		for (const auto& wrld : Geography::GetWorldSpaces(a_cell)) {
-			locs.push_back(wrld->location);
-		}
-		return locs;
 	}
 
 	std::vector<RE::TESForm*> GetInventoryNamedObjects(STATICARGS, RE::TESObjectREFR* a_container,

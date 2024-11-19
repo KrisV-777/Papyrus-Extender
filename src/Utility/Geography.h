@@ -2,57 +2,52 @@
 
 namespace Geography
 {
+	inline RE::TESObjectREFRPtr GetLinkedDoor(const RE::TESObjectREFR* a_ref)
+	{
+		const auto xTeleport = a_ref->extraList.GetByType<RE::ExtraTeleport>();
+		const auto teleportData = xTeleport ? xTeleport->teleportData : nullptr;
+		if (!teleportData) {
+			return nullptr;
+		}
+		return teleportData->linkedDoor.get();
+	}
+
 	inline std::vector<RE::TESWorldSpace*> GetWorldSpaces(RE::TESObjectCELL* a_cell)
 	{
 		if (a_cell->IsExteriorCell()) {
 			return std::vector<RE::TESWorldSpace*>{ a_cell->GetRuntimeData().worldSpace };
 		}
-
 		std::unordered_set<RE::TESWorldSpace*> result;
-
 		std::unordered_set<RE::TESObjectCELL*> seen;
 		std::queue<RE::TESObjectCELL*> q;
-
 		seen.insert(a_cell);
 		q.push(a_cell);
-
 		while (!q.empty()) {
 			const auto& cell = q.back();
 			q.pop();
 
 			cell->ForEachReference([&result, &q, &seen](RE::TESObjectREFR* a_ref) {
-				const auto xTeleport = a_ref->extraList.GetByType<RE::ExtraTeleport>();
-
-				if (const auto teleportData = xTeleport ? xTeleport->teleportData : nullptr) {
-					if (const auto linkedDoorRef = teleportData->linkedDoor) {
-						if (const auto linkedDoorPtr = linkedDoorRef.get()) {
-							if (const auto linkedDoor = linkedDoorPtr.get()) {
-								auto parentCell = linkedDoor->GetParentCell();
-
-								if (!parentCell) {
-									parentCell = linkedDoor->GetSaveParentCell();
-								}
-
-								if (parentCell) {
-									if (parentCell->IsExteriorCell()) {
-										if (const auto& world = parentCell->GetRuntimeData().worldSpace) {
-											logger::info("world {} from doors: {}-{}", world->GetFormEditorID(), a_ref->GetFormID(), linkedDoor->GetFormID());
-											result.insert(world);
-										}
-									} else if (!seen.contains(parentCell)) {
-										q.push(parentCell);
-										seen.insert(parentCell);
-									}
-								}
-							}
+				const auto linkedDoor = GetLinkedDoor(a_ref);
+				if (!linkedDoor) {
+					return RE::BSContainer::ForEachResult::kContinue;
+				}
+				auto parentCell = linkedDoor->GetParentCell();
+				if (!parentCell) {
+					parentCell = linkedDoor->GetSaveParentCell();
+				} else {
+					if (parentCell->IsExteriorCell()) {
+						if (const auto& world = parentCell->GetRuntimeData().worldSpace) {
+							logger::info("world {} from doors: {}-{}", world->GetFormEditorID(), a_ref->GetFormID(), linkedDoor->GetFormID());
+							result.insert(world);
 						}
+					} else if (!seen.contains(parentCell)) {
+						q.push(parentCell);
+						seen.insert(parentCell);
 					}
 				}
-
 				return RE::BSContainer::ForEachResult::kContinue;
 			});
 		}
-
 		return std::vector<RE::TESWorldSpace*>{ result.begin(), result.end() };
 	}
 
@@ -68,17 +63,12 @@ namespace Geography
 	inline CellTraversal TraverseInteriorCellStartingAt(RE::TESObjectCELL* a_cell, const int a_depth, const RE::TESObjectREFR* a_ref = nullptr)
 	{
 		CellTraversal seen;
-
-		if (!a_cell->IsInteriorCell())
+		if (!a_cell->IsInteriorCell()) {
 			return seen;
-
+		}
 		seen.insert({ a_cell, CellPath{ CellEdge{ nullptr, a_ref, 0.f } } });
-
 		std::queue<RE::TESObjectCELL*> traverse;
 		traverse.push(a_cell);
-
-		logger::info("beginning traversal");
-
 		while (!traverse.empty()) {
 			const auto cell = traverse.front();
 			traverse.pop();
@@ -86,42 +76,27 @@ namespace Geography
 			const auto& path = seen[cell];
 			const auto& [_, entry, dist] = path.back();
 			const auto& entryPos = entry ? entry->GetPosition() : RE::NiPoint3{};
-
 			if (!cell->IsInteriorCell() || path.size() + 1 > a_depth) {
 				continue;
 			}
-
 			// list of all adjacent cells and the closest door
-			std::unordered_map<RE::TESObjectCELL*, CellEdge> adjacent;
-
+			std::unordered_map<RE::TESObjectCELL*, CellEdge> adjacent{};
 			cell->ForEachReference([&adjacent, &entryPos, &seen, dist](RE::TESObjectREFR* a_ref) {
-				const auto xTeleport = a_ref->extraList.GetByType<RE::ExtraTeleport>();
-
-				if (const auto teleportData = xTeleport ? xTeleport->teleportData : nullptr) {
-					logger::info("found teleport data on 0x{:X}", a_ref->GetFormID());
-
-					if (const auto linkedDoorRef = teleportData->linkedDoor) {
-						if (const auto linkedDoorPtr = linkedDoorRef.get()) {
-							if (const auto linkedDoor = linkedDoorPtr.get()) {
-								auto parentCell = linkedDoor->GetParentCell();
-
-								if (!parentCell) {
-									parentCell = linkedDoor->GetSaveParentCell();
-								}
-
-								if (parentCell) {
-									if (!seen.contains(parentCell)) {
-										const auto& currDist = a_ref->GetPosition().GetDistance(entryPos);
-										if (!adjacent.contains(parentCell) || adjacent[parentCell].interior->GetPosition().GetDistance(entryPos) > currDist) {
-											adjacent[parentCell] = CellEdge{ a_ref, linkedDoor, dist + currDist };
-										}
-									}
-								}
-							}
+				const auto linkedDoor = GetLinkedDoor(a_ref);
+				if (!linkedDoor) {
+					return RE::BSContainer::ForEachResult::kContinue;
+				}
+				auto parentCell = linkedDoor->GetParentCell();
+				if (!parentCell) {
+					parentCell = linkedDoor->GetSaveParentCell();
+				} else {
+					if (!seen.contains(parentCell)) {
+						const auto& currDist = a_ref->GetPosition().GetDistance(entryPos);
+						if (!adjacent.contains(parentCell) || adjacent[parentCell].interior->GetPosition().GetDistance(entryPos) > currDist) {
+							adjacent[parentCell] = CellEdge{ a_ref, linkedDoor.get(), dist + currDist };
 						}
 					}
 				}
-
 				return RE::BSContainer::ForEachResult::kContinue;
 			});
 
@@ -131,15 +106,11 @@ namespace Geography
 				logger::info("found adjacent cell: {}", curr->GetFormEditorID());
 			}
 		}
-
 		seen.erase(a_cell);
 
-		std::string contents;
+		std::string contents{};
 		for (const auto& [cell, path] : seen) {
-			contents += "\n";
-			contents += cell->GetFormEditorID();
-			contents += " = ";
-
+			contents += std::format("\n{} = ", cell->GetFormEditorID());
 			for (const auto& edge : path) {
 				contents += std::format("0x{:X}:0x{:X}:{}",
 						edge.interior ? edge.interior->GetFormID() : 0,
@@ -147,9 +118,7 @@ namespace Geography
 						edge.dist);
 			}
 		}
-
-		logger::info("total adjacent cells: {}{}", seen.size(), contents);
-
+		logger::info("total adjacent cells: {}, {}", seen.size(), contents);
 		return seen;
 	}
 
@@ -157,7 +126,6 @@ namespace Geography
 	inline RE::NiPoint3 GetRealPosition(const RE::TESObjectREFR* a_objRef)
 	{
 		RE::NiPoint3 position = a_objRef->GetPosition();
-
 		if (const RE::TESWorldSpace* worldSpace = a_objRef->GetWorldspace()) {
 			RE::NiPoint3 worldSpaceOffset{ worldSpace->worldMapOffsetData.mapOffsetX,
 				worldSpace->worldMapOffsetData.mapOffsetY,
@@ -165,7 +133,6 @@ namespace Geography
 
 			position += worldSpaceOffset * worldSpace->worldMapOffsetData.mapScale;
 		}
-
 		return position;
 	}
 
@@ -174,7 +141,7 @@ namespace Geography
 		return GetRealPosition(a_ref1).GetDistance(GetRealPosition(a_ref2));
 	}
 
-	const CellEdge* GetClosestExteriorCellEdge(const CellTraversal& a_paths)
+	inline const CellEdge* GetClosestExteriorCellEdge(const CellTraversal& a_paths)
 	{
 		float minDist = -1;
 		const CellEdge* closestEdge = nullptr;
@@ -187,11 +154,10 @@ namespace Geography
 				}
 			}
 		}
-
 		return closestEdge;
 	}
 
-	const CellEdge* GetClosestExteriorCellEdge(const RE::TESObjectREFR* a_ref)
+	inline const CellEdge* GetClosestExteriorCellEdge(const RE::TESObjectREFR* a_ref)
 	{
 		const auto& paths = TraverseInteriorCellStartingAt(a_ref->GetParentCell(), 10, a_ref);
 		return GetClosestExteriorCellEdge(paths);
