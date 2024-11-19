@@ -9,8 +9,6 @@ namespace Papyrus::PyramidUtilsP
 
   std::string GetButtonForDXScanCode(RE::StaticFunctionTag*, int a_keyCode);
 
-	std::string ReplaceAt(RE::StaticFunctionTag*, std::string a_str, int a_index, std::string a_replacement);
-
 	RE::TESObjectREFR* GetQuestMarker(STATICARGS, RE::TESQuest* a_quest);
 
   std::vector<RE::TESWorldSpace*> GetExteriorWorldSpaces(STATICARGS, RE::TESObjectCELL* a_cell);
@@ -40,9 +38,6 @@ namespace Papyrus::PyramidUtilsP
 
 		// input
 		REGISTERFUNC(GetButtonForDXScanCode, "PyramidUtils", true);
-
-		// strings
-		REGISTERFUNC(ReplaceAt, "PyramidUtils", true);
 
 		// geography
 		REGISTERFUNC(GetQuestMarker, "PyramidUtils", true);

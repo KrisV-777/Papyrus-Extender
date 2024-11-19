@@ -63,9 +63,20 @@ namespace Papyrus::Util
 		}
 	}
 
+	namespace String
+	{
+		std::string ReplaceAt(STATICARGS, std::string a_str, int a_index, std::string a_replacement);
+
+		inline void Register(VM* a_vm)
+		{
+			REGISTERFUNC(ReplaceAt, "SPE_Utility", false);
+		}
+	}
+
 	inline bool Register(VM* a_vm)
 	{
 		Array::Register(a_vm);
+		String::Register(a_vm);
 
 		return true;
 	}

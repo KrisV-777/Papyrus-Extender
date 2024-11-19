@@ -191,4 +191,18 @@ namespace Papyrus::Util
 		}
 
 	}	// namespace Array
+
+	namespace String
+	{
+		std::string ReplaceAt(STATICARGS, std::string a_str, int a_index, std::string a_replacement)
+		{
+			if (a_index < 0 || a_index >= static_cast<int>(a_str.size())) {
+				TRACESTACK("index out of bounds");
+				return a_str;
+			}
+			a_str.replace(a_index, a_replacement.size(), a_replacement);
+			return a_str;
+		}
+	}	// namespace String
+
 } // namespace Papyrus::Utility

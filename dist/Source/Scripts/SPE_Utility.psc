@@ -1,5 +1,7 @@
 ScriptName SPE_Utility Hidden
 
+; ---------------------- Array functions ----------------------
+
 ; Given a list of forms, remove any form that does not contain any of the given keywords
 ; if abMatchAll is true, only forms that contain all keywords are returned
 ; if abInvert is true, only forms that do not contain any of the keywords are returned
@@ -47,3 +49,9 @@ String[] Function FilterArray_String(String[] arr, String[] filter) native globa
 int[] Function PushFront_Int(int[] arr, int push) global native
 float[] Function PushFront_Float(float[] arr, float push) global native
 String[] Function PushFront_String(String[] arr, String push) global native
+
+
+; ---------------------- String functions ----------------------
+
+; Replace the character at index aiIndex in asStr with asReplace
+String Function ReplaceAt(String asStr, int aiIndex, String asReplace) global native

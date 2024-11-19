@@ -104,12 +104,6 @@ namespace Papyrus::PyramidUtilsP
 		return PyramidUtils::Input::GetButtonForDXScanCode(a_keyCode);
 	}
 
-	std::string ReplaceAt(RE::StaticFunctionTag*, std::string a_str, int a_index, std::string a_replacement)
-	{
-		a_str.replace(a_index, a_replacement.size(), a_replacement);
-		return a_str;
-	}
-
 	RE::TESObjectREFR* GetQuestMarker(STATICARGS, RE::TESQuest* a_quest)
 	{
     if (!a_quest) {

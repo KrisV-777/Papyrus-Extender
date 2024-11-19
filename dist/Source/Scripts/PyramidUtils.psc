@@ -51,7 +51,9 @@ Actor Function GetPlayerSpeechTarget() global
 EndFunction
 
 ; String Processing
-String Function ReplaceAt(String asStr, int aiIndex, String asReplace) global native
+String Function ReplaceAt(String asStr, int aiIndex, String asReplace) global
+  return SPE_Utility.ReplaceAt(asStr, aiIndex, asReplace)
+EndFunction
 
 ; Input
 String Function GetButtonForDXScanCode(int aiCode) global native
