@@ -9,3 +9,6 @@ String Function GetMenuName() native global
 ; The difference between this menu and the one provided by SKSE is that this one will *not* pause the game while open
 bool Function OpenCustomMenu(String asFilePath) native global
 Function CloseCustomMenu() native global
+
+; Return the string representation of the given key code
+String Function GetButtonForDXScanCode(int aiKeyCode) native global

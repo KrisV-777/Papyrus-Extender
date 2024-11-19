@@ -1,7 +1,6 @@
 #include "PyramidUtils.h"
 
 #include "PyramidUtils/Geography.h"
-#include "PyramidUtils/Input.h"
 #include "PyramidUtils/MarkerManager.h"
 #include "Utility/StringUtil.h"
 #include "Utility/Keywords.h"
@@ -97,11 +96,6 @@ namespace Papyrus::PyramidUtilsP
 			}
 		}
 		return totalRemoved;
-	}
-
-	std::string GetButtonForDXScanCode(RE::StaticFunctionTag*, int a_keyCode)
-	{
-		return PyramidUtils::Input::GetButtonForDXScanCode(a_keyCode);
 	}
 
 	RE::TESObjectREFR* GetQuestMarker(STATICARGS, RE::TESQuest* a_quest)

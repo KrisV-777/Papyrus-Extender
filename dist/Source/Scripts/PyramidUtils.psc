@@ -56,7 +56,9 @@ String Function ReplaceAt(String asStr, int aiIndex, String asReplace) global
 EndFunction
 
 ; Input
-String Function GetButtonForDXScanCode(int aiCode) global native
+String Function GetButtonForDXScanCode(int aiCode) global
+  return SPE_Interface.GetButtonForDXScanCode(aiCode)
+EndFunction
 Function RegisterForAllAlphaNumericKeys(Form akForm) global
   akForm.RegisterForKey(57)
   int i = 2

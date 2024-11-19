@@ -1,4 +1,5 @@
 #pragma once
+
 namespace Papyrus::PyramidUtilsP
 {
 	// COMEBACK: Idk where to sort this in. Mayhaps split it up into different functions?
@@ -6,8 +7,6 @@ namespace Papyrus::PyramidUtilsP
 
   bool FormHasKeyword(STATICARGS, RE::TESForm* a_form, std::vector<RE::BGSKeyword*> a_kwds, bool a_all);
   bool FormHasKeywordStrings(STATICARGS, RE::TESForm* a_form, std::vector<std::string> a_kwds, bool a_all);
-
-  std::string GetButtonForDXScanCode(RE::StaticFunctionTag*, int a_keyCode);
 
 	RE::TESObjectREFR* GetQuestMarker(STATICARGS, RE::TESQuest* a_quest);
 
@@ -35,9 +34,6 @@ namespace Papyrus::PyramidUtilsP
 		// forms
 		REGISTERFUNC(FormHasKeyword, "PyramidUtils", true);
 		REGISTERFUNC(FormHasKeywordStrings, "PyramidUtils", true);
-
-		// input
-		REGISTERFUNC(GetButtonForDXScanCode, "PyramidUtils", true);
 
 		// geography
 		REGISTERFUNC(GetQuestMarker, "PyramidUtils", true);

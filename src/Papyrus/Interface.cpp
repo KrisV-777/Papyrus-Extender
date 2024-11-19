@@ -45,5 +45,10 @@ namespace Papyrus::Interface
 	{
 		Internal::Interface::CustomMenu::Hide();
 	}
+	
+	std::string GetButtonForDXScanCode(RE::StaticFunctionTag*, int a_keyCode)
+	{
+		return SKSE::InputMap::GetKeyName(static_cast<uint32_t>(a_keyCode));
+	}
 
-}
+}	 // namespace Papyrus::Interface
