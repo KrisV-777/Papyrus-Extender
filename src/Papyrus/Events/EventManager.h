@@ -10,9 +10,10 @@ namespace Papyrus::Events
 		AnimationEventEx_Filter() = default;
 		AnimationEventEx_Filter(const RE::BSFixedString& a_eventName)
 		{
-			const auto splits = StringUtil::StringSplit(a_eventName, '.');
-			eventName[0] = splits.front();
-			eventName[1] = splits.size() > 1 ? splits.back() : "";
+			const auto splits = StringUtil::StringSplitToOwned(a_eventName, '.');
+			eventName[0] = RE::BSFixedString{ splits.front() };
+			eventName[1] = RE::BSFixedString{ splits.size() > 1 ? splits.back() : "" };
+			logger::info("Registered Callback for AnimEventEx: {} - Payload: {}", eventName[0].data(), eventName[1].data());
 		}
 		~AnimationEventEx_Filter() = default;
 
@@ -20,6 +21,7 @@ namespace Papyrus::Events
 		{
 			return a_event == eventName[0] && (eventName[1].empty() || a_payload == eventName[1]);
 		}
+
 		bool Load(SKSE::SerializationInterface* a_intfc)
 		{
 			std::string out;
@@ -32,6 +34,7 @@ namespace Papyrus::Events
 			};
 			return read(0) && read(1);
 		}
+
 		bool Save(SKSE::SerializationInterface* a_intfc) const
 		{
 			return stl::write_string(a_intfc, eventName[0]) && stl::write_string(a_intfc, eventName[1]);
@@ -51,8 +54,8 @@ namespace Papyrus::Events
 	{
 	public:
 #define SCRIPTEVENT(NAME, KIND, ...) SKSE::RegistrationMapUnique<AnimationEventEx_Filter, __VA_ARGS__> _##NAME{ "On" #NAME };
-		SCRIPTEVENT(AnimationEventEx, 'aevx', const RE::TESObjectREFR*, RE::BSFixedString, RE::BSFixedString)
-// #include ".defines/EventsMapUnique.def"
+		// SCRIPTEVENT(AnimationEventEx, 'aevx', const RE::TESObjectREFR*, RE::BSFixedString, RE::BSFixedString)
+#include ".defines/EventsMapUnique.def"
 #undef SCRIPTEVENT
 
 	public:
