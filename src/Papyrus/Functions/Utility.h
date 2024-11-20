@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Papyrus::Util
+namespace Papyrus::Utility
 {
 	namespace Array
 	{

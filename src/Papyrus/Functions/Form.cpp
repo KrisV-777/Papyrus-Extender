@@ -1,5 +1,6 @@
 #include "Form.h"
-#include <Utility/Keywords.h>
+
+#include "Util/Keywords.h"
 
 namespace Papyrus::Form
 {
@@ -108,7 +109,7 @@ namespace Papyrus::Form
 			TRACESTACK("Form is null");
 			return false;
 		}
-		return Utility::HasKeywords(a_form, a_kwds, a_all);
+		return Keywords::HasKeywords(a_form, a_kwds, a_all);
 	}
 
 	bool FormHasKeywordStrings(STATICARGS, RE::TESForm* a_form, std::vector<std::string> a_kwds, bool a_all, bool a_partialmatch)

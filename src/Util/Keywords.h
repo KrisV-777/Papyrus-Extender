@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Utility
+namespace Keywords
 {
 	inline bool HasKeywords(RE::TESForm* a_form, std::vector<RE::BGSKeyword*> a_kwds, bool a_matchAll)
   {
@@ -24,4 +24,4 @@ namespace Utility
 		return false;
   }
 
-} // namespace Utility
+}	 // namespace Keywords

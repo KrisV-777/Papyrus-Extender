@@ -1,26 +1,18 @@
 #include "Serialization.h"
 
 #include "Data/ActorManager.h"
+#include "Papyrus/Events/EventManager.h"
 
 namespace Serialization
 {
-	constexpr frozen::string GetTypeName(uint32_t a_type)
-	{
-		const char ret[4] {
-			static_cast<char>(a_type & 0xff),
-			static_cast<char>((a_type >> 8) & 0xff),
-			static_cast<char>((a_type >> 16) & 0xff),
-			static_cast<char>((a_type >> 24) & 0xff)
-		};
-		return frozen::string{ ret, 4 };
-	}
-
 	void Serializer::SaveCallback(SKSE::SerializationInterface* a_intfc)
 	{
-#define SAVE(type, func)                                                              \
-	if (!a_intfc->OpenRecord(type, _Version))                                           \
-		logger::error("Failed to open record {}", std::string_view{ GetTypeName(type) }); \
-	else                                                                                \
+		Papyrus::Events::EventManager::GetSingleton()->Save(a_intfc, _Version);
+
+#define SAVE(type, func)                                          \
+	if (!a_intfc->OpenRecord(type, _Version))                       \
+		logger::error("Failed to open record {}", GetTypeName(type)); \
+	else                                                            \
 		func(a_intfc);
 
 		SAVE(_ActorHandler, Data::ActorManager::GetSingleton()->Save);
@@ -34,7 +26,7 @@ namespace Serialization
 		uint32_t version;
 		uint32_t length;
 		while (a_intfc->GetNextRecordInfo(type, version, length)) {
-			const auto typestr = std::string_view{ GetTypeName(type) };
+			const auto typestr = GetTypeName(type);
 			if (version != _Version) {
 				logger::info("Invalid Version for loaded Data of Type = {}. Expected = {}; Got = {}", typestr, std::to_underlying(_Version), version);
 				continue;
@@ -45,7 +37,7 @@ namespace Serialization
 				Data::ActorManager::GetSingleton()->Load(a_intfc);
 				break;
 			default:
-				logger::warn("Unrecognized type: {}", typestr);
+				Papyrus::Events::EventManager::GetSingleton()->Load(a_intfc, type);
 				break;
 			}
 		}
@@ -53,9 +45,13 @@ namespace Serialization
 
 	void Serializer::RevertCallback(SKSE::SerializationInterface* a_intfc)
 	{
+		Papyrus::Events::EventManager::GetSingleton()->Revert(a_intfc);
 		Data::ActorManager::GetSingleton()->Revert(a_intfc);
 	}
 
-	void Serializer::FormDeleteCallback(RE::VMHandle)	{}
+	void Serializer::FormDeleteCallback(RE::VMHandle a_handle)
+	{
+		Papyrus::Events::EventManager::GetSingleton()->FormDelete(a_handle);
+	}
 
 }	 // namespace Serialization

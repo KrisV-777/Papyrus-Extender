@@ -1,7 +1,7 @@
 #include "ObjectRef.h"
 
-#include "Utility/Keywords.h"
-#include <Utility/Geography.h>
+#include "Util/Keywords.h"
+#include "Util/Geography.h"
 
 namespace Papyrus::ObjectRef
 {
@@ -52,7 +52,7 @@ namespace Papyrus::ObjectRef
       return a_object.GetPlayable() && a_object.GetName()[0] != '\0';
     });
     for (const auto& [form, data] : inv) {
-      if (a_keywords.empty() || Utility::HasKeywords(form, a_keywords, a_matchall)) {
+      if (a_keywords.empty() || Keywords::HasKeywords(form, a_keywords, a_matchall)) {
         items.push_back(form);
       }
     }

@@ -1,14 +1,8 @@
 #pragma once
 
-#undef min
-#undef max
-
-#include <frozen/string.h>
-
 namespace Serialization
 {
 	static inline constexpr auto RecordID = 'scpe';
-	constexpr frozen::string GetTypeName(uint32_t a_type);
 
 	struct Serializer final
 	{

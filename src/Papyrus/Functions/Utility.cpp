@@ -4,9 +4,9 @@
 #include <lua.hpp>
 #include <sol/sol.hpp>
 
-#include "Utility/Keywords.h"
+#include "Util/Keywords.h"
 
-namespace Papyrus::Util
+namespace Papyrus::Utility
 {
 	inline std::optional<sol::state> OpenLua(const std::string& code)
 	{
@@ -154,7 +154,7 @@ namespace Papyrus::Util
 			for (const auto& form : a_forms) {
 				if (!form)
 					continue;
-				if (Utility::HasKeywords(form, a_keywords, a_matchall) != a_invert) {
+				if (Keywords::HasKeywords(form, a_keywords, a_matchall) != a_invert) {
 					filtered.push_back(form);
 				}
 			}

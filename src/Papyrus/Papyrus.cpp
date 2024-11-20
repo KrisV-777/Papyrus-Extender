@@ -1,14 +1,15 @@
 #include "Papyrus.h"
 
-#include "Actor.h"
-#include "Cell.h"
-#include "Form.h"
-#include "GlobalVariable.h"
-#include "Interface.h"
-#include "Location.h"
-#include "ObjectRef.h"
-#include "Quest.h"
-#include "Utility.h"
+#include "Events/MapUnique.h"
+#include "Functions/Actor.h"
+#include "Functions/Cell.h"
+#include "Functions/Form.h"
+#include "Functions/GlobalVariable.h"
+#include "Functions/Interface.h"
+#include "Functions/Location.h"
+#include "Functions/ObjectRef.h"
+#include "Functions/Quest.h"
+#include "Functions/Utility.h"
 
 namespace Papyrus
 {
@@ -20,6 +21,8 @@ namespace Papyrus
 			return false;
 		}
 
+		papyrus->Register(Events::MapUnique::Register);
+
 		papyrus->Register(Actor::Register);
 		papyrus->Register(Cell::Register);
 		papyrus->Register(Form::Register);
@@ -28,7 +31,7 @@ namespace Papyrus
 		papyrus->Register(Location::Register);
 		papyrus->Register(ObjectRef::Register);
 		papyrus->Register(Quest::Register);
-		papyrus->Register(Util::Register);
+		papyrus->Register(Utility::Register);
 
 		logger::info("Registered Papyrus Functions");
 

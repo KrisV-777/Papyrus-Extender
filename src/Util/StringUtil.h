@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Utility
+namespace StringUtil
 {
 #define STR_TRANSFORM(f) std::transform(str.cbegin(), str.cend(), str.begin(), [](int c) { return f(c); });
 
@@ -16,11 +16,6 @@ namespace Utility
 	}
 
 #undef STR_TRANSFORM
-
-	inline std::string HexString(int a_num)
-	{
-		return std::format("0x{:X}", a_num);
-	}
 
 	inline std::vector<std::string_view> StringSplit(const std::string_view a_view, const char a_delim)
 	{

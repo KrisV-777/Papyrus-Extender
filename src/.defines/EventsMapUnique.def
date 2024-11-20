@@ -1,0 +1,3 @@
+// #define SCRIPTEVENT(NAME, KIND, ...)
+
+SCRIPTEVENT(AnimationEventEx, 'aevx', const RE::TESObjectREFR*, RE::BSFixedString, RE::BSFixedString)

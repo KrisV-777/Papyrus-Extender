@@ -8,7 +8,7 @@
 #include <frozen/map.h>
 
 #include "Data/ActorManager.h"
-#include "Utility/Keywords.h"
+#include "Util/Keywords.h"
 
 namespace Papyrus::Actor
 {
