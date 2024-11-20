@@ -38,14 +38,15 @@ namespace Papyrus::Events::MapUnique
 			if (!a_event || a_event->holder->IsNot(RE::FormType::ActorCharacter)) {
 				return EventResult::kContinue;
 			}
-			auto source = const_cast<RE::Actor*>(a_event->holder->As<RE::Actor>());
+			const auto source = const_cast<RE::Actor*>(a_event->holder->As<RE::Actor>());
+			const auto &tag = a_event->tag, &payload = a_event->payload;
 			assert(source);
 			Papyrus::Events::EventManager::GetSingleton()->_AnimationEventEx.QueueEvent(
 					source,
-					[=](const AnimationEventEx_Filter& a_filter, bool a_match) {	 //capture by reference [&] bad
-						return a_match == a_filter.Apply(a_event->tag, a_event->payload);
+					[=](const AnimationEventEx_Filter& a_filter, bool a_match) {
+						return a_match == a_filter.Apply(tag, payload);
 					},
-					source, a_event->tag, a_event->payload);
+					source, tag, payload);
 
 			return EventResult::kContinue;
 		}
