@@ -39,9 +39,9 @@ elseif is_mode("release") then
 end
 
 set_config("skse_xbyak", true)
--- set_config("skyrim_se", true)
--- set_config("skyrim_ae", true)
--- set_config("skyrim_vr", true)
+set_config("skyrim_se", true)
+set_config("skyrim_ae", true)
+set_config("skyrim_vr", true)
 
 -- Target
 target(PROJECT_NAME)
