@@ -1,35 +1,20 @@
 #pragma once
 
 #include "EventManager.h"
-#include "Util/StringUtil.h"
+#include "MapUniqueFilters.h"
 
 namespace Papyrus::Events::MapUnique
 {
-#define REGISTER(type, match, ...)                                                                  \
-	if (!obj) {                                                                                       \
-		a_vm->TraceStack("obj is none", a_stackID);                                                     \
-		return;                                                                                         \
-	}                                                                                                 \
-	EventManager::GetSingleton()->type.Register(obj, AnimationEventEx_Filter{ __VA_ARGS__ }, match); \
-	RegisterImpl(obj);
-#define UNREGISTER(type, match, ...)                                                                  \
-	if (!obj) {                                                                                         \
-		a_vm->TraceStack("obj is none", a_stackID);                                                       \
-		return;                                                                                           \
-	}                                                                                                   \
-	EventManager::GetSingleton()->type.Unregister(obj, AnimationEventEx_Filter{ __VA_ARGS__ }, match); \
-	UnregisterImpl(obj);
-
 	struct AnimationEventEx :
 		public Singleton<AnimationEventEx>,
 		public RE::BSTEventSink<RE::BSAnimationGraphEvent>
 	{
-		static inline void RegisterForAnimationEventEx(STATICARGS, RE::Actor* obj, RE::BSFixedString filter) { REGISTER(_AnimationEventEx, true, filter); }
-		static inline void RegisterForAnimationEventEx_Alias(STATICARGS, RE::BGSRefAlias* obj, RE::BSFixedString filter) { REGISTER(_AnimationEventEx, true, filter); }
-		static inline void RegisterForAnimationEventEx_MgEff(STATICARGS, RE::ActiveEffect* obj, RE::BSFixedString filter) { REGISTER(_AnimationEventEx, true, filter); }
-		static inline void UnregisterForAnimationEventEx(STATICARGS, RE::Actor* obj, RE::BSFixedString filter) { UNREGISTER(_AnimationEventEx, true, filter); }
-		static inline void UnregisterForAnimationEventEx_Alias(STATICARGS, RE::BGSRefAlias* obj, RE::BSFixedString filter) { UNREGISTER(_AnimationEventEx, true, filter); }
-		static inline void UnregisterForAnimationEventEx_MgEff(STATICARGS, RE::ActiveEffect* obj, RE::BSFixedString filter) { UNREGISTER(_AnimationEventEx, true, filter); }
+		static void RegisterForAnimationEventEx(STATICARGS, RE::Actor* obj, RE::BSFixedString filter);
+		static void RegisterForAnimationEventEx_Alias(STATICARGS, RE::BGSRefAlias* obj, RE::BSFixedString filter);
+		static void RegisterForAnimationEventEx_MgEff(STATICARGS, RE::ActiveEffect* obj, RE::BSFixedString filter);
+		static void UnregisterForAnimationEventEx(STATICARGS, RE::Actor* obj, RE::BSFixedString filter);
+		static void UnregisterForAnimationEventEx_Alias(STATICARGS, RE::BGSRefAlias* obj, RE::BSFixedString filter);
+		static void UnregisterForAnimationEventEx_MgEff(STATICARGS, RE::ActiveEffect* obj, RE::BSFixedString filter);
 
 	protected:
 		using EventResult = RE::BSEventNotifyControl;
@@ -52,28 +37,12 @@ namespace Papyrus::Events::MapUnique
 		}
 
 	private:
-		static inline void RegisterImpl(const RE::Actor* a_ref) { a_ref->AddAnimationGraphEventSink(GetSingleton()); }
-		static inline void UnregisterImpl(const RE::Actor* a_ref) { a_ref->RemoveAnimationGraphEventSink(GetSingleton()); }
-		static inline void RegisterImpl(const RE::ActiveEffect* a_ref)
-		{
-			if (const auto ref = a_ref->GetTargetActor())
-				ref->AddAnimationGraphEventSink(GetSingleton());
-		}
-		static inline void UnregisterImpl(const RE::ActiveEffect* a_ref)
-		{
-			if (const auto ref = a_ref->GetTargetActor())
-				ref->RemoveAnimationGraphEventSink(GetSingleton());
-		}
-		static inline void RegisterImpl(const RE::BGSRefAlias* a_ref)
-		{
-			if (const auto ref = a_ref->GetActorReference())
-				ref->AddAnimationGraphEventSink(GetSingleton());
-		}
-		static inline void UnregisterImpl(const RE::BGSRefAlias* a_ref)
-		{
-			if (const auto ref = a_ref->GetActorReference())
-				ref->RemoveAnimationGraphEventSink(GetSingleton());
-		}
+		static void RegisterImpl(const RE::Actor* a_ref);
+		static void UnregisterImpl(const RE::Actor* a_ref);
+		static void RegisterImpl(const RE::ActiveEffect* a_ref);
+		static void UnregisterImpl(const RE::ActiveEffect* a_ref);
+		static void RegisterImpl(const RE::BGSRefAlias* a_ref);
+		static void UnregisterImpl(const RE::BGSRefAlias* a_ref);
 
 	public:
 		static inline void Register(VM* a_vm)
