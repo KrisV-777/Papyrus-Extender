@@ -5,7 +5,7 @@ PROJECT_NAME = "ScrabsPapyrusExtender"
 
 -- Project
 set_project(PROJECT_NAME)
-set_version("2.1.2")
+set_version("2.1.3")
 set_languages("cxx23")
 set_license("Apache-2.0")
 set_warnings("allextra", "error")
