@@ -216,7 +216,7 @@ namespace Papyrus::Actor
 			const auto& [count, entry] = invData;
 			if (count <= 0 || entry->IsWorn())
 				continue;
-			const auto kwdItm = item->As<RE::BGSKeywordForm>();
+			const auto kwdItm = Keywords::AsKeywordForm(item);
 			if (!kwdItm)
 				continue;
 			for (const auto& kwd : a_kwds) {
@@ -242,7 +242,7 @@ namespace Papyrus::Actor
 			const auto& [count, entry] = invData;
 			if (count <= 0 || entry->IsWorn())
 				continue;
-			const auto kwdItm = item->As<RE::BGSKeywordForm>();
+			const auto kwdItm = Keywords::AsKeywordForm(item);
 			if (!kwdItm)
 				continue;
 			for (auto& kwdStr : a_kwds) {

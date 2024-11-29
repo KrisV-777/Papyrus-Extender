@@ -2,9 +2,18 @@
 
 namespace Keywords
 {
+	inline RE::BGSKeywordForm* AsKeywordForm(RE::TESForm* a_form)
+	{
+		if (const auto arrowForm = a_form->As<RE::TESAmmo>()) {
+			return arrowForm->AsKeywordForm();
+		} else {
+			return a_form->As<RE::BGSKeywordForm>();
+		}
+	}
+
 	inline bool HasKeywords(RE::TESForm* a_form, std::vector<RE::BGSKeyword*> a_kwds, bool a_matchAll)
   {
-		auto keywordForm = a_form->As<RE::BGSKeywordForm>();
+		auto keywordForm = AsKeywordForm(a_form);
 		if (!keywordForm) {
 			return false;
 		}

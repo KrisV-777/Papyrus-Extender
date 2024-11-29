@@ -118,7 +118,7 @@ namespace Papyrus::Form
       TRACESTACK("FormHasKeywordStrings: form is nullptr");
       return false;
     }
-		const auto kwdForm = a_form->As<RE::BGSKeywordForm>();
+		const auto kwdForm = Keywords::AsKeywordForm(a_form);
 		if (!kwdForm) {
 			return false;
 		}
