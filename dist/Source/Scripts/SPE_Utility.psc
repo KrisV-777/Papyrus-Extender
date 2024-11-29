@@ -36,8 +36,8 @@ int Function FindIf_String(String[] arr, String lua) global native
 ; Example: RemoveIf_Int(arr, "function predicate(a) return a > 5 end") removes all elements that are > 5
 ; "lua" can also be a filepath to a .lua file containing the function, relative to Skyrim.exe
 int[] Function RemoveIf_Int(int[] arr, String lua) native global
-float[] Function RemoveIf_Float(Form[] arr, String lua) native global
-String[] Function RemoveIf_String(Form[] arr, String lua) native global
+float[] Function RemoveIf_Float(Float[] arr, String lua) native global
+String[] Function RemoveIf_String(String[] arr, String lua) native global
 
 ; Remove any objects from arr that are present in filter, return the filtered array
 Form[] Function FilterArray_Form(Form[] arr, Form[] filter) native global
