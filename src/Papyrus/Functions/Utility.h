@@ -67,6 +67,11 @@ namespace Papyrus::Utility
 			REGISTERFUNC(IntersectArray_Float, "SPE_Utility", false);
 			REGISTERFUNC(IntersectArray_String, "SPE_Utility", false);
 
+			REGISTERFUNC(FilterFormsByKeyword, "SPE_Utility", false);
+			REGISTERFUNC(FilterFormsByGoldValue, "SPE_Utility", false);
+			REGISTERFUNC(FilterBySlot, "SPE_Utility", false);
+			REGISTERFUNC(FilterBySlotmask, "SPE_Utility", false);
+
 			REGISTERFUNC(PushFront_Int, "SPE_Utility", false);
 			REGISTERFUNC(PushFront_Float, "SPE_Utility", false);
 			REGISTERFUNC(PushFront_String, "SPE_Utility", false);
