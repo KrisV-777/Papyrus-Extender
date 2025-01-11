@@ -10,6 +10,9 @@ Form[] Function GetItemsByKeyword(ObjectReference akReference, Keyword[] akKeywo
 ; Remove all items in akForms from akReference, optionally moving them to akTarget. Returns the number of items removed
 int Function RemoveItems(ObjectReference akReference, Form[] akForms, ObjectReference akTarget) global native
 
+; Remove Decals (Blood Stains etc) from this reference (optionally including weapon decals)
+Function RemoveDecals(ObjectReference akReference, bool abAndWeapon) global native
+
 ; Return IteamHealthPercent of akForm. Alternative to ObjecReference.GetItemHealthPercent for items stored in a container (range: 0.0 - 1.6)
 float Function GetTemperFactor(ObjectReference akReference, Form akForm) global native
 

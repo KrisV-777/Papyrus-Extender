@@ -7,6 +7,8 @@ namespace Papyrus::ObjectRef
 	std::vector<RE::TESForm*> GetItemsByKeyword(STATICARGS, RE::TESObjectREFR* a_ref, std::vector<RE::BGSKeyword*> a_keywords, bool a_matchall);
 	int32_t RemoveItems(STATICARGS, RE::TESObjectREFR* a_reference, std::vector<RE::TESForm*> a_forms, RE::TESObjectREFR* a_target);
 
+	void RemoveDecals(STATICARGS, RE::TESObjectREFR* a_ref, bool a_andweapon);
+
 	float GetTemperFactor(STATICARGS, RE::TESObjectREFR* a_reference, RE::TESForm* a_form);
 
   float GetTravelDistance(STATICARGS, RE::TESObjectREFR* a_ref1, RE::TESObjectREFR* a_ref2);
@@ -21,6 +23,7 @@ namespace Papyrus::ObjectRef
 		REGISTERFUNC(GetItemsByKeyword, "SPE_ObjectRef", true);
 		REGISTERFUNC(RemoveItems, "SPE_ObjectRef", true);
 
+		REGISTERFUNC(RemoveDecals, "SPE_ObjectRef", true);
 		REGISTERFUNC(GetTemperFactor, "SPE_ObjectRef", true);
 
 		REGISTERFUNC(GetTravelDistance, "SPE_ObjectRef", true);

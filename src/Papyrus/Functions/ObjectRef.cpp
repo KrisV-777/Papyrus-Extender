@@ -82,6 +82,34 @@ namespace Papyrus::ObjectRef
 		return totalRemoved;
   }
 
+	void RemoveDecals(STATICARGS, RE::TESObjectREFR* a_ref, bool a_andweapon)
+	{
+    if (!a_ref) {
+      TRACESTACK("Ref is nullptr");
+			return;
+		}
+		const auto& skinnedDecalStr = RE::FixedStrings::GetSingleton()->skinnedDecalNode;
+		for (uint32_t i = 0; i < 2; i++) {
+			const auto root = a_ref->Get3D(i);
+			const auto decalNode = root ? static_cast<RE::BGSDecalNode*>(root->GetObjectByName(skinnedDecalStr)) : nullptr;
+			if (decalNode) {
+				auto& decals = decalNode->GetRuntimeData().decals;
+				for (auto& decal : decals) {
+					if (decal) {
+						decal->lifetime = 0.0f;
+					}
+				}
+			}
+			if (const auto& biped = a_ref->GetBiped(i); a_andweapon && biped) {
+				for (auto j = std::to_underlying(RE::BIPED_OBJECT::kHandToHandMelee); j < std::to_underlying(RE::BIPED_OBJECT::kTotal); j++) {
+					if (auto& weapon = biped->objects[j].partClone) {
+						RE::BSTempEffectWeaponBlood::ClearEffectForWeapon(weapon.get());
+					}
+				}
+			}
+		}
+	}
+
 	float GetTemperFactor(STATICARGS, RE::TESObjectREFR* a_reference, RE::TESForm* a_form)
   {
     if (!a_reference) {
