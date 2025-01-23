@@ -6,7 +6,7 @@
         ["cmake#31fecfc4"] = {
             repo = {
                 branch = "master",
-                commit = "f6251c012faabeb21d64f50a41e892e56993e77e",
+                commit = "fe7add7f0c8800650baed8cf68a573b2b4465052",
                 url = "https://github.com/xmake-io/xmake-repo.git"
             },
             version = "3.31.0-rc2"
@@ -46,7 +46,7 @@
         ["magic_enum#31fecfc4"] = {
             repo = {
                 branch = "master",
-                commit = "f6251c012faabeb21d64f50a41e892e56993e77e",
+                commit = "fe7add7f0c8800650baed8cf68a573b2b4465052",
                 url = "https://github.com/xmake-io/xmake-repo.git"
             },
             version = "v0.9.6"
