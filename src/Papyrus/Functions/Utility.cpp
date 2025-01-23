@@ -181,7 +181,7 @@ namespace Papyrus::Utility
 
 		std::vector<RE::TESObjectARMO*> FilterBySlot(RE::StaticFunctionTag*, std::vector<RE::TESForm*> a_forms, std::vector<int> a_slots, bool a_all)
 		{
-			const auto slotmask = std::accumulate(a_slots.begin(), a_slots.end(), 0u, [](auto acc, auto b) { return acc | (b - 30); });
+			const auto slotmask = std::accumulate(a_slots.begin(), a_slots.end(), 0u, [](auto acc, auto b) { return acc | (1 << (b - 30)); });
 			return FilterBySlotmask(nullptr, a_forms, slotmask, a_all);
 		}
 
