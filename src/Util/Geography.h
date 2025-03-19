@@ -34,16 +34,18 @@ namespace Geography
 				auto parentCell = linkedDoor->GetParentCell();
 				if (!parentCell) {
 					parentCell = linkedDoor->GetSaveParentCell();
-				} else {
-					if (parentCell->IsExteriorCell()) {
-						if (const auto& world = parentCell->GetRuntimeData().worldSpace) {
-							logger::info("world {} from doors: {}-{}", world->GetFormEditorID(), a_ref->GetFormID(), linkedDoor->GetFormID());
-							result.insert(world);
-						}
-					} else if (!seen.contains(parentCell)) {
-						q.push(parentCell);
-						seen.insert(parentCell);
+					if (!parentCell) {
+						return RE::BSContainer::ForEachResult::kContinue;
 					}
+				}
+				if (parentCell->IsExteriorCell()) {
+					if (const auto& world = parentCell->GetRuntimeData().worldSpace) {
+						logger::info("world {} from doors: {}-{}", world->GetFormEditorID(), a_ref->GetFormID(), linkedDoor->GetFormID());
+						result.insert(world);
+					}
+				} else if (!seen.contains(parentCell)) {
+					q.push(parentCell);
+					seen.insert(parentCell);
 				}
 				return RE::BSContainer::ForEachResult::kContinue;
 			});
@@ -89,12 +91,14 @@ namespace Geography
 				auto parentCell = linkedDoor->GetParentCell();
 				if (!parentCell) {
 					parentCell = linkedDoor->GetSaveParentCell();
-				} else {
-					if (!seen.contains(parentCell)) {
-						const auto& currDist = a_ref->GetPosition().GetDistance(entryPos);
-						if (!adjacent.contains(parentCell) || adjacent[parentCell].interior->GetPosition().GetDistance(entryPos) > currDist) {
-							adjacent[parentCell] = CellEdge{ a_ref, linkedDoor.get(), dist + currDist };
-						}
+					if (!parentCell) {
+						return RE::BSContainer::ForEachResult::kContinue;
+					}
+				}
+				if (!seen.contains(parentCell)) {
+					const auto& currDist = a_ref->GetPosition().GetDistance(entryPos);
+					if (!adjacent.contains(parentCell) || adjacent[parentCell].interior->GetPosition().GetDistance(entryPos) > currDist) {
+						adjacent[parentCell] = CellEdge{ a_ref, linkedDoor.get(), dist + currDist };
 					}
 				}
 				return RE::BSContainer::ForEachResult::kContinue;
