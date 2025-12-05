@@ -1,3 +1,7 @@
+# Papyrus Extender ([Nexus Mods Mirror](https://www.nexusmods.com/skyrimspecialedition/mods/115164))
+
+A modders ressource that exposes various utility functions to papyrus. See the respective Papyrus scripts for a list of all available functions and their documentation [here](https://github.com/KrisV-777/Papyrus-Extender/tree/main/dist/Source/Scripts).
+
 ## Requirements
 * [xmake](https://xmake.io/#/)
 	* Add this to your `PATH`
