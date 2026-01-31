@@ -4,8 +4,8 @@
 #undef min
 #undef max
 
-#include <frozen/string.h>
 #include <frozen/map.h>
+#include <frozen/string.h>
 
 #include "Data/ActorManager.h"
 #include "Util/Keywords.h"
@@ -14,10 +14,10 @@ namespace Papyrus::Actor
 {
 	RE::BSFixedString GetRaceType(STATICARGS, RE::Actor* a_actor)
 	{
-    if (!a_actor) {
+		if (!a_actor) {
 			TRACESTACK("Actor is null");
-      return "";
-    }
+			return "";
+		}
 		const auto base = a_actor->GetActorBase();
 		const auto race = a_actor->GetRace();
 		const auto sex = base->GetSex();
@@ -193,9 +193,9 @@ namespace Papyrus::Actor
 				continue;
 			} else if (a_slotmask) {
 				const auto slots = static_cast<uint32_t>(armo->GetSlotMask());
-        if ((slots & a_slotmask) == 0) {
-          continue;
-        }
+				if ((slots & a_slotmask) == 0) {
+					continue;
+				}
 			}
 			ret.push_back(armo);
 		}
@@ -214,7 +214,7 @@ namespace Papyrus::Actor
 		});
 		for (const auto& [item, invData] : inv) {
 			const auto& [count, entry] = invData;
-			if (count <= 0 || entry->IsWorn())
+			if (count <= 0 || !entry->IsWorn())
 				continue;
 			const auto kwdItm = Keywords::AsKeywordForm(item);
 			if (!kwdItm)
@@ -296,4 +296,4 @@ namespace Papyrus::Actor
 		dismount(a_actor);
 	}
 
-} // namespace Papyrus::Actor
+}	 // namespace Papyrus::Actor
