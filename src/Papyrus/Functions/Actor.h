@@ -17,6 +17,11 @@ namespace Papyrus::Actor
 	std::vector<RE::BGSKeyword*> WornHasKeywords(STATICARGS, RE::Actor* a_actor, std::vector<RE::BGSKeyword*> a_kwds);
   std::vector<RE::BGSKeyword*> WornHasKeywordStrings(STATICARGS, RE::Actor* a_actor, std::vector<RE::BSFixedString> a_kwds, bool a_partialmatch);
 
+	float GetRunSpeed(STATICARGS, RE::Actor* a_actor);
+	float GetJogSpeed(STATICARGS, RE::Actor* a_actor);
+	float GetFastWalkSpeed(STATICARGS, RE::Actor* a_actor);
+	float GetWalkSpeed(STATICARGS, RE::Actor* a_actor);
+
 	RE::Actor* GetPlayerSpeechTarget(RE::StaticFunctionTag*);
 	void Dismount(STATICARGS, RE::Actor* a_actor);
 
@@ -36,6 +41,11 @@ namespace Papyrus::Actor
 		REGISTERFUNC(GetWornArmor, "SPE_Actor", false);
 		REGISTERFUNC(WornHasKeywords, "SPE_Actor", false);
 		REGISTERFUNC(WornHasKeywordStrings, "SPE_Actor", false);
+
+		REGISTERFUNC(GetRunSpeed, "SPE_Actor", false);
+		REGISTERFUNC(GetJogSpeed, "SPE_Actor", false);
+		REGISTERFUNC(GetFastWalkSpeed, "SPE_Actor", false);
+		REGISTERFUNC(GetWalkSpeed, "SPE_Actor", false);
 
 		REGISTERFUNC(GetPlayerSpeechTarget, "SPE_Actor", false);
 		REGISTERFUNC(Dismount, "SPE_Actor", true);

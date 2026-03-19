@@ -271,6 +271,42 @@ namespace Papyrus::Actor
 		return std::vector<RE::BGSKeyword*>{ worn.begin(), worn.end() };
 	}
 
+	float GetRunSpeed(STATICARGS, RE::Actor* a_actor)
+	{
+		if (!a_actor) {
+			TRACESTACK("Actor is null");
+			return 0.0f;
+		}
+		return a_actor->GetRunSpeed();
+	}
+
+	float GetJogSpeed(STATICARGS, RE::Actor* a_actor)
+	{
+		if (!a_actor) {
+			TRACESTACK("Actor is null");
+			return 0.0f;
+		}
+		return a_actor->GetJogSpeed();
+	}
+
+	float GetFastWalkSpeed(STATICARGS, RE::Actor* a_actor)
+	{
+		if (!a_actor) {
+			TRACESTACK("Actor is null");
+			return 0.0f;
+		}
+		return a_actor->GetFastWalkSpeed();
+	}
+
+	float GetWalkSpeed(STATICARGS, RE::Actor* a_actor)
+	{
+		if (!a_actor) {
+			TRACESTACK("Actor is null");
+			return 0.0f;
+		}
+		return a_actor->GetWalkSpeed();
+	}
+
 	RE::Actor* GetPlayerSpeechTarget(RE::StaticFunctionTag*)
 	{
 		if (auto speakerObjPtr = RE::MenuTopicManager::GetSingleton()->speaker) {
