@@ -192,7 +192,7 @@ namespace Papyrus::Actor
 			if (!armo) {
 				continue;
 			} else if (a_slotmask) {
-				const auto slots = static_cast<uint32_t>(armo->GetSlotMask());
+				const auto slots = armo->GetSlotMask().underlying();
 				if ((slots & a_slotmask) == 0) {
 					continue;
 				}

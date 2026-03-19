@@ -2,7 +2,7 @@
 
 namespace Hooks
 {
-	constexpr auto noCollisionFlag = static_cast<std::uint32_t>(RE::CFilter::Flag::kNoCollision);
+	constexpr auto noCollisionFlag = static_cast<std::uint32_t>(RE::CFilter::Flags::kNoCollision);
 
 	class Manager
 	{

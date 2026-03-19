@@ -3,82 +3,90 @@
         version = "1.0"
     },
     ["windows|x64"] = {
-        ["cmake#31fecfc4"] = {
+        ["cmake#f56260b5"] = {
             repo = {
                 branch = "master",
-                commit = "fe7add7f0c8800650baed8cf68a573b2b4465052",
+                commit = "3a3468812c7cea1482d114361c40034c3db07274",
                 url = "https://github.com/xmake-io/xmake-repo.git"
             },
-            version = "3.31.6"
+            version = "4.2.3"
         },
-        ["directxmath#31fecfc4"] = {
+        ["directxmath 2024.02#f56260b5"] = {
             repo = {
                 branch = "master",
-                commit = "f6251c012faabeb21d64f50a41e892e56993e77e",
+                commit = "3a3468812c7cea1482d114361c40034c3db07274",
                 url = "https://github.com/xmake-io/xmake-repo.git"
             },
             version = "2024.02"
         },
-        ["directxtk#31fecfc4"] = {
+        ["directxtk 24.2.0#f56260b5"] = {
             repo = {
                 branch = "master",
-                commit = "f6251c012faabeb21d64f50a41e892e56993e77e",
+                commit = "3a3468812c7cea1482d114361c40034c3db07274",
                 url = "https://github.com/xmake-io/xmake-repo.git"
             },
             version = "24.2.0"
         },
-        ["frozen#31fecfc4"] = {
+        ["frozen#f56260b5"] = {
             repo = {
                 branch = "master",
-                commit = "f6251c012faabeb21d64f50a41e892e56993e77e",
+                commit = "3a3468812c7cea1482d114361c40034c3db07274",
                 url = "https://github.com/xmake-io/xmake-repo.git"
             },
             version = "1.2.0"
         },
-        ["lua#31fecfc4"] = {
+        ["lua#f56260b5"] = {
             repo = {
                 branch = "master",
-                commit = "f6251c012faabeb21d64f50a41e892e56993e77e",
+                commit = "3a3468812c7cea1482d114361c40034c3db07274",
                 url = "https://github.com/xmake-io/xmake-repo.git"
             },
             version = "v5.4.7"
         },
-        ["magic_enum#31fecfc4"] = {
+        ["magic_enum#f56260b5"] = {
             repo = {
                 branch = "master",
-                commit = "fe7add7f0c8800650baed8cf68a573b2b4465052",
+                commit = "3a3468812c7cea1482d114361c40034c3db07274",
                 url = "https://github.com/xmake-io/xmake-repo.git"
             },
-            version = "v0.9.6"
+            version = "v0.9.7"
         },
-        ["rapidcsv#31fecfc4"] = {
+        ["ninja#f56260b5"] = {
             repo = {
                 branch = "master",
-                commit = "f6251c012faabeb21d64f50a41e892e56993e77e",
+                commit = "3a3468812c7cea1482d114361c40034c3db07274",
                 url = "https://github.com/xmake-io/xmake-repo.git"
             },
-            version = "8.84"
+            version = "v1.13.1"
         },
-        ["sol2#31fecfc4"] = {
+        ["rapidcsv v8.92#f56260b5"] = {
             repo = {
                 branch = "master",
-                commit = "f6251c012faabeb21d64f50a41e892e56993e77e",
+                commit = "3a3468812c7cea1482d114361c40034c3db07274",
                 url = "https://github.com/xmake-io/xmake-repo.git"
             },
-            version = "v3.3.0"
+            version = "v8.92"
         },
-        ["spdlog#9c36f0a9"] = {
+        ["sol2#f56260b5"] = {
             repo = {
                 branch = "master",
-                commit = "c54cc6e7bc4c571586864d58fdcf119d2ac32250",
+                commit = "3a3468812c7cea1482d114361c40034c3db07274",
                 url = "https://github.com/xmake-io/xmake-repo.git"
             },
-            version = "v1.15.1"
+            version = "v3.5.0"
         },
-        ["xbyak#31fecfc4"] = {
+        ["spdlog v1.16.0#09c8c173"] = {
             repo = {
                 branch = "master",
-                commit = "c54cc6e7bc4c571586864d58fdcf119d2ac32250",
+                commit = "3a3468812c7cea1482d114361c40034c3db07274",
+                url = "https://github.com/xmake-io/xmake-repo.git"
+            },
+            version = "v1.16.0"
+        },
+        ["xbyak v7.06#f56260b5"] = {
+            repo = {
+                branch = "master",
+                commit = "3a3468812c7cea1482d114361c40034c3db07274",
                 url = "https://github.com/xmake-io/xmake-repo.git"
             },
             version = "v7.06"

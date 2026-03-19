@@ -192,7 +192,7 @@ namespace Papyrus::Utility
 				const auto armor = form ? form->As<RE::TESObjectARMO>() : nullptr;
 				if (!armor)
 					continue;
-				const auto slotmask = static_cast<uint32_t>(armor->GetSlotMask());
+				const auto slotmask = armor->GetSlotMask().underlying();
 				const auto res = slotmask & a_slotmask;
 				if (a_all && res == a_slotmask) {
 					filtered.push_back(armor);
