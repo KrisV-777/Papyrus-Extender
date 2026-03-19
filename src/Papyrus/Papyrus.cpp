@@ -13,28 +13,28 @@
 
 namespace Papyrus
 {
-	bool Register()
-	{
-		const auto papyrus = SKSE::GetPapyrusInterface();
-		if (!papyrus) {
-			logger::critical("Failed to get papyurs interface");
-			return false;
-		}
+    bool Register()
+    {
+        const auto papyrus = SKSE::GetPapyrusInterface();
+        if (!papyrus) {
+            logger::critical("Failed to get papyurs interface");
+            return false;
+        }
 
-		papyrus->Register(Events::MapUnique::Register);
+        papyrus->Register(Events::MapUnique::Register);
 
-		papyrus->Register(Actor::Register);
-		papyrus->Register(Cell::Register);
-		papyrus->Register(Form::Register);
-		papyrus->Register(GlobalVariable::Register);
-		papyrus->Register(Interface::Register);
-		papyrus->Register(Location::Register);
-		papyrus->Register(ObjectRef::Register);
-		papyrus->Register(Quest::Register);
-		papyrus->Register(Utility::Register);
+        papyrus->Register(Actor::Register);
+        papyrus->Register(Cell::Register);
+        papyrus->Register(Form::Register);
+        papyrus->Register(GlobalVariable::Register);
+        papyrus->Register(Interface::Register);
+        papyrus->Register(Location::Register);
+        papyrus->Register(ObjectRef::Register);
+        papyrus->Register(Quest::Register);
+        papyrus->Register(Utility::Register);
 
-		logger::info("Registered Papyrus Functions");
+        logger::info("Registered Papyrus Functions");
 
-		return true;
-	}
-}	 // namespace Papyrus
+        return true;
+    }
+}  // namespace Papyrus

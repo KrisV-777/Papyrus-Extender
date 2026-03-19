@@ -4,13 +4,13 @@
 
 namespace Papyrus::Quest
 {
-	RE::TESObjectREFR* GetQuestMarker(STATICARGS, RE::TESQuest* a_quest)
-  {
-		if (!a_quest) {
-			TRACESTACK("GetQuestMarker: quest is nullptr");
-			return nullptr;
-		}
-		return Data::QuestMarkerData::GetQuestMarker(a_quest);
-	}
+    RE::TESObjectREFR* GetQuestMarker(STATICARGS, RE::TESQuest* a_quest)
+    {
+        if (!a_quest) {
+            TRACESTACK("GetQuestMarker: quest is nullptr");
+            return nullptr;
+        }
+        return Data::QuestMarkerData::GetQuestMarker(a_quest);
+    }
 
-} // namespace Papyrus::Quest
+}  // namespace Papyrus::Quest
