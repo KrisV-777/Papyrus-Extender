@@ -137,11 +137,11 @@ jobs:
 
       - name: Configure
         shell: pwsh
-        run: xmake f -m release --build_papyrus=n
+        run: xmake f -y -m release --build_papyrus=n
 
       - name: Build
         shell: pwsh
-        run: xmake build ScrabsPapyrusExtender --shallow
+        run: xmake build -y ScrabsPapyrusExtender --shallow
 
       - name: Package release artifact
         id: package
