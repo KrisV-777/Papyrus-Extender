@@ -81,7 +81,7 @@ option_end()
 
 -- Dependencies & Includes
 -- https://github.com/xmake-io/xmake-repo/tree/dev
-add_requires("magic_enum", "xbyak", "lua", "sol2", "frozen")
+add_requires("magic_enum", "xbyak", "sol2", "frozen")
 
 -- policies
 set_policy("package.requires_lock", true)
@@ -147,7 +147,7 @@ target(PROJECT_NAME)
     set_enabled(get_config("build_dll"))
 
     -- Dependencies
-    add_packages("magic_enum", "xbyak", "lua", "sol2", "frozen")
+    add_packages("magic_enum", "xbyak", "sol2", "frozen")
 
     -- CommonLibSSE
     add_deps("commonlibsse-ng")

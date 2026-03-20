@@ -35,7 +35,7 @@
             },
             version = "1.2.0"
         },
-        ["lua#f56260b5"] = {
+        ["lua >=5.4#f56260b5"] = {
             repo = {
                 branch = "master",
                 commit = "3a3468812c7cea1482d114361c40034c3db07274",
