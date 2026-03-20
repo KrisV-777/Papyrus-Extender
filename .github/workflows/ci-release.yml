@@ -141,7 +141,7 @@ jobs:
 
       - name: Build
         shell: pwsh
-        run: xmake build -y ScrabsPapyrusExtender --shallow
+        run: xmake -b -y ScrabsPapyrusExtender
 
       - name: Package release artifact
         id: package
