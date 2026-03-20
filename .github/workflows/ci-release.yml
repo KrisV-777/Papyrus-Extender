@@ -114,10 +114,6 @@ jobs:
           $versionPattern = 'PROJECT_VERSION = "([^"]+)"'
           $currentFile = Get-Content xmake.lua -Raw
 
-          Write-Host "Debug: github.event_name='${{ github.event_name }}'"
-          Write-Host "Debug: github.ref='${{ github.ref }}'"
-          Write-Host "Debug: github.sha='${{ github.sha }}'"
-
           $currentMatch = [regex]::Match($currentFile, $versionPattern)
           if (-not $currentMatch.Success) {
             throw 'Unable to find PROJECT_VERSION in xmake.lua.'
@@ -125,35 +121,26 @@ jobs:
 
           $currentVersion = $currentMatch.Groups[1].Value
           $versionChanged = 'false'
-          $before = '${{ github.event.before }}'
-          $previousVersion = ''
+          $latestTag = 'n/a'
+          $previousReleaseVersion = 'n/a'
 
-          Write-Host "Debug: currentVersion='$currentVersion'"
-          Write-Host "Debug: github.event.before='$before'"
+          if ('${{ github.event_name }}' -eq 'push') {
+            $latestTag = git tag --list 'v*' --sort=-v:refname |
+              Where-Object { $_ -match '^v\d+\.\d+\.\d+$' } |
+              Select-Object -First 1
 
-          if ('${{ github.event_name }}' -eq 'push' -and $before -and $before -ne '0000000000000000000000000000000000000000') {
-            Write-Host "Debug: using push comparison against before SHA"
-            $previousFile = git show "${before}:xmake.lua" 2>$null
-            Write-Host "Debug: git show exit code=$LASTEXITCODE"
-            if ($LASTEXITCODE -eq 0) {
-              $previousMatch = [regex]::Match($previousFile, $versionPattern)
-              if ($previousMatch.Success) {
-                $previousVersion = $previousMatch.Groups[1].Value
-                Write-Host "Debug: previousVersion='$previousVersion'"
-                if ($previousVersion -ne $currentVersion) {
-                  $versionChanged = 'true'
-                }
-              } else {
-                Write-Host "Debug: previous xmake.lua did not match versionPattern"
+            if ($latestTag) {
+              $previousReleaseVersion = $latestTag -replace '^v', ''
+              if ($previousReleaseVersion -ne $currentVersion) {
+                $versionChanged = 'true'
               }
-            } elseif ($LASTEXITCODE -ne 0) {
-              Write-Host "Debug: failed to read previous xmake.lua from before SHA"
+            } else {
+              $versionChanged = 'true'
             }
-          } else {
-            Write-Host "Debug: push comparison skipped (event is not push or before SHA unavailable)"
           }
 
-          Write-Host "Debug: final version='$currentVersion' version_changed='$versionChanged'"
+          Write-Host "Current version='$currentVersion'"
+          Write-Host "Last release version='$previousReleaseVersion'"
 
           "version=$currentVersion" >> $env:GITHUB_OUTPUT
           "version_tag=v$currentVersion" >> $env:GITHUB_OUTPUT
