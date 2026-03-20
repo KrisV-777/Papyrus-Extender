@@ -161,8 +161,9 @@ jobs:
             Remove-Item $stagingDir -Recurse -Force
           }
 
+          New-Item -ItemType Directory -Path $stagingDir -Force | Out-Null
+          Copy-Item -Path dist\* -Destination $stagingDir -Recurse -Force
           New-Item -ItemType Directory -Path $pluginDir -Force | Out-Null
-          Copy-Item dist\* $stagingDir -Recurse -Force
           Copy-Item build\windows\x64\release\ScrabsPapyrusExtender.dll $pluginDir -Force
 
           if (Test-Path build\windows\x64\release\ScrabsPapyrusExtender.pdb) {
