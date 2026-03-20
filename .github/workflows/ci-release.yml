@@ -54,11 +54,24 @@ jobs:
               continue
             }
 
-            $pscTime = $psc.LastWriteTimeUtc
-            $pexTime = (Get-Item $pexPath).LastWriteTimeUtc
+            $pscGitPath = ((Resolve-Path -Relative $psc.FullName) -replace '^[.][\\/]', '') -replace '\\', '/'
+            $pexGitPath = ((Resolve-Path -Relative $pexPath) -replace '^[.][\\/]', '') -replace '\\', '/'
 
-            if ($pexTime -lt $pscTime) {
-              $failures += "$pexPath is older than $($psc.FullName)"
+            $pscTime = git log -1 --format=%ct -- $pscGitPath
+            $pexTime = git log -1 --format=%ct -- $pexGitPath
+
+            if (-not $pscTime) {
+              $failures += "Unable to read git timestamp for $pscGitPath"
+              continue
+            }
+
+            if (-not $pexTime) {
+              $failures += "Unable to read git timestamp for $pexGitPath"
+              continue
+            }
+
+            if ([int64]$pexTime -lt [int64]$pscTime) {
+              $failures += "$pexGitPath is older than $pscGitPath"
             }
           }
 
