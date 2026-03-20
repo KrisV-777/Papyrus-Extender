@@ -6,7 +6,6 @@
 build/
 .xmake/
 
-dist/Scripts/
 dist/SKSE/Plugins/*.dll
 dist/SKSE/Plugins/*.pdb
 .release
