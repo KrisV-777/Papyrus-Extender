@@ -163,6 +163,16 @@ jobs:
 
           New-Item -ItemType Directory -Path $stagingDir -Force | Out-Null
           Copy-Item -Path dist\* -Destination $stagingDir -Recurse -Force
+
+          $skseDir = Join-Path $stagingDir 'SKSE'
+          if (Test-Path $skseDir -PathType Leaf) {
+            Remove-Item $skseDir -Force
+          }
+          New-Item -ItemType Directory -Path $skseDir -Force | Out-Null
+
+          if (Test-Path $pluginDir -PathType Leaf) {
+            Remove-Item $pluginDir -Force
+          }
           New-Item -ItemType Directory -Path $pluginDir -Force | Out-Null
           Copy-Item build\windows\x64\release\ScrabsPapyrusExtender.dll $pluginDir -Force
 
