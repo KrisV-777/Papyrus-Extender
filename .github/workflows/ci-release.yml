@@ -132,9 +132,8 @@ jobs:
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Install xmake
-        shell: pwsh
-        run: choco install xmake --yes --no-progress
+      - name: Setup xmake
+        uses: xmake-io/github-action-setup-xmake@v1
 
       - name: Configure
         shell: pwsh
