@@ -16,17 +16,22 @@ concurrency:
   group: ci-release-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  RELEASE_ASSET_DIR: release-assets
+
 jobs:
   verify-scripts:
     name: Verify Papyrus scripts
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Verify .pex files are up to date
-        shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $srcRoot = 'dist/Source/Scripts'
@@ -87,6 +92,9 @@ jobs:
     name: Build
     needs: verify-scripts
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
     outputs:
       artifact_name: ${{ steps.package.outputs.artifact_name }}
       version: ${{ steps.version.outputs.version }}
@@ -102,7 +110,6 @@ jobs:
 
       - name: Detect version change
         id: version
-        shell: pwsh
         run: |
           $versionPattern = 'PROJECT_VERSION = "([^"]+)"'
           $currentFile = Get-Content xmake.lua -Raw
@@ -136,19 +143,16 @@ jobs:
         uses: xmake-io/github-action-setup-xmake@v1
 
       - name: Configure
-        shell: pwsh
         run: xmake f -y -m release --build_papyrus=n
 
       - name: Build
-        shell: pwsh
         run: xmake -b -y ScrabsPapyrusExtender
 
       - name: Package release artifact
         id: package
-        shell: pwsh
         run: |
           $version = '${{ steps.version.outputs.version }}'
-          $artifactName = "ScrabsPapyrusExtender-$version"
+          $artifactName = "Kris Papyrus Extender - V$version"
           $archivePath = Join-Path $env:RUNNER_TEMP "$artifactName.zip"
           $stagingDir = Join-Path $env:RUNNER_TEMP $artifactName
           $pluginDir = Join-Path $stagingDir 'SKSE\Plugins'
@@ -220,7 +224,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ needs.build.outputs.artifact_name }}
-          path: release-assets
+          path: ${{ env.RELEASE_ASSET_DIR }}
 
       - name: Create GitHub release
         if: steps.tag.outputs.exists == 'false'
@@ -228,5 +232,5 @@ jobs:
         with:
           tag_name: ${{ needs.build.outputs.version_tag }}
           name: ${{ needs.build.outputs.version_tag }}
-          files: release-assets/${{ needs.build.outputs.artifact_name }}.zip
+          files: ${{ env.RELEASE_ASSET_DIR }}/${{ needs.build.outputs.artifact_name }}.zip
           generate_release_notes: true
