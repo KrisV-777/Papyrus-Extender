@@ -118,11 +118,12 @@ jobs:
           Write-Host "Debug: github.ref='${{ github.ref }}'"
           Write-Host "Debug: github.sha='${{ github.sha }}'"
 
-          if ($currentFile -notmatch $versionPattern) {
+          $currentMatch = [regex]::Match($currentFile, $versionPattern)
+          if (-not $currentMatch.Success) {
             throw 'Unable to find PROJECT_VERSION in xmake.lua.'
           }
 
-          $currentVersion = $Matches[1]
+          $currentVersion = $currentMatch.Groups[1].Value
           $versionChanged = 'false'
           $before = '${{ github.event.before }}'
           $previousVersion = ''
@@ -134,16 +135,19 @@ jobs:
             Write-Host "Debug: using push comparison against before SHA"
             $previousFile = git show "${before}:xmake.lua" 2>$null
             Write-Host "Debug: git show exit code=$LASTEXITCODE"
-            if ($LASTEXITCODE -eq 0 -and $previousFile -match $versionPattern) {
-              $previousVersion = $Matches[1]
-              Write-Host "Debug: previousVersion='$previousVersion'"
-              if ($previousVersion -ne $currentVersion) {
-                $versionChanged = 'true'
+            if ($LASTEXITCODE -eq 0) {
+              $previousMatch = [regex]::Match($previousFile, $versionPattern)
+              if ($previousMatch.Success) {
+                $previousVersion = $previousMatch.Groups[1].Value
+                Write-Host "Debug: previousVersion='$previousVersion'"
+                if ($previousVersion -ne $currentVersion) {
+                  $versionChanged = 'true'
+                }
+              } else {
+                Write-Host "Debug: previous xmake.lua did not match versionPattern"
               }
             } elseif ($LASTEXITCODE -ne 0) {
               Write-Host "Debug: failed to read previous xmake.lua from before SHA"
-            } else {
-              Write-Host "Debug: previous xmake.lua did not match versionPattern"
             }
           } else {
             Write-Host "Debug: push comparison skipped (event is not push or before SHA unavailable)"
