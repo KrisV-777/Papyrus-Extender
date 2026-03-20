@@ -17,101 +17,62 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  compile-scripts:
-    name: Compile Papyrus scripts
+  verify-scripts:
+    name: Verify Papyrus scripts
     runs-on: windows-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache script sources
-        id: cache-sources
-        uses: actions/cache@v4
-        with:
-          path: |
-            .github/Papyrus/SRC
-            .github/Papyrus/SRC/TESV_Papyrus_Flags.flg
-          key: papyrus-script-sources-v1
-
-      - name: Cache Caprica
-        id: cache-caprica
-        uses: actions/cache@v4
-        with:
-          path: .github/Caprica
-          key: ${{ runner.os }}-caprica-0.3.0
-
-      - name: Fetch Caprica 0.3.0
-        if: steps.cache-caprica.outputs.cache-hit != 'true'
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Verify .pex files are up to date
         shell: pwsh
         run: |
-          gh release download -O .github/Caprica.7z -p '*.7z' -R Orvid/Caprica v0.3.0
-          7z x .github/Caprica.7z "-o.github\Caprica"
+          $ErrorActionPreference = 'Stop'
+          $srcRoot = 'dist/Source/Scripts'
+          $binRoot = 'dist/Scripts'
 
-      - name: Checkout Papyrus sources
-        if: steps.cache-sources.outputs.cache-hit != 'true'
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Path .github/Papyrus -Force | Out-Null
-          $repos = @('SRC')
-          Push-Location .github/Papyrus
-          foreach ($repo in $repos) {
-            New-Item -ItemType Directory -Name $repo -Force | Out-Null
-            Push-Location $repo
-            git init
-            git remote add origin https://github.com/IHateMyKite/PAPYRUS.git
-            git sparse-checkout set --no-cone $repo
-            git fetch --depth=1 origin main
-            git checkout -b main origin/main
-            Remove-Item .git -Recurse -Force
-            Pop-Location
-          }
-          Pop-Location
-
-      - name: Checkout TESV flags file
-        if: steps.cache-sources.outputs.cache-hit != 'true'
-        shell: pwsh
-        run: |
-          Push-Location .github/Papyrus/SRC
-          New-Item -ItemType Directory -Path temp -Force | Out-Null
-          Push-Location temp
-          git init
-          git remote add origin https://github.com/Rukan/Grimy-Skyrim-Papyrus-Source.git
-          git sparse-checkout set --no-cone TESV_Papyrus_Flags.flg
-          git fetch --depth=1 origin master
-          git checkout -b master origin/master
-          Remove-Item .git -Recurse -Force
-          Move-Item TESV_Papyrus_Flags.flg ../TESV_Papyrus_Flags.flg -Force
-          Pop-Location
-          Remove-Item temp -Recurse -Force
-          Pop-Location
-
-      - name: Prepare script output directory
-        shell: pwsh
-        run: |
-          if (Test-Path dist/scripts) {
-            Remove-Item dist/scripts/* -Force
-          } else {
-            New-Item -ItemType Directory -Path dist/scripts -Force | Out-Null
+          if (-not (Test-Path $srcRoot)) {
+            throw "Missing source scripts directory: $srcRoot"
           }
 
-      - name: Run Caprica
-        shell: pwsh
-        run: |
-          .github/Caprica/Caprica.exe --game skyrim --import ".github/Papyrus/SRC;" --output "dist/scripts" --flags=".github/Papyrus/SRC/TESV_Papyrus_Flags.flg" "${{ github.workspace }}/dist/Source/Scripts" -R -q
+          if (-not (Test-Path $binRoot)) {
+            throw "Missing compiled scripts directory: $binRoot"
+          }
 
-      - name: Upload compiled scripts artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: compiled-scripts
-          path: dist/scripts
-          if-no-files-found: error
+          $pscFiles = Get-ChildItem -Path $srcRoot -Filter *.psc -File
+          if (-not $pscFiles -or $pscFiles.Count -eq 0) {
+            throw "No .psc files found in $srcRoot"
+          }
+
+          $failures = @()
+
+          foreach ($psc in $pscFiles) {
+            $pexPath = Join-Path $binRoot ($psc.BaseName + '.pex')
+            if (-not (Test-Path $pexPath)) {
+              $failures += "Missing compiled file for $($psc.Name): $pexPath"
+              continue
+            }
+
+            $pscTime = $psc.LastWriteTimeUtc
+            $pexTime = (Get-Item $pexPath).LastWriteTimeUtc
+
+            if ($pexTime -lt $pscTime) {
+              $failures += "$pexPath is older than $($psc.FullName)"
+            }
+          }
+
+          if ($failures.Count -gt 0) {
+            Write-Host "Found outdated Papyrus compiled scripts:"
+            $failures | ForEach-Object { Write-Host "- $_" }
+            throw "Papyrus .pex files are not up to date with .psc sources."
+          }
+
+          Write-Host "All .pex files are up to date with their .psc counterparts."
 
   build:
     name: Build
-    needs: compile-scripts
+    needs: verify-scripts
     runs-on: windows-latest
     outputs:
       artifact_name: ${{ steps.package.outputs.artifact_name }}
@@ -169,12 +130,6 @@ jobs:
       - name: Build
         shell: pwsh
         run: xmake build ScrabsPapyrusExtender --shallow
-
-      - name: Download compiled scripts artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: compiled-scripts
-          path: dist/Scripts
 
       - name: Package release artifact
         id: package
