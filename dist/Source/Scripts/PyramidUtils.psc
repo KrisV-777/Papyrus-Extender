@@ -5,10 +5,10 @@ Scriptname PyramidUtils Hidden
 
 ; Actor
 Function SetActorCalmed(Actor akActor, bool abCalmed) global
-  return SPE_Actor.SetActorCalmed(akActor, abCalmed)
+  SPE_Actor.SetActorCalmed(akActor, abCalmed)
 EndFunction
 Function SetActorFrozen(Actor akTarget, bool abFrozen) global
-  return SPE_Actor.SetActorFrozen(akTarget, abFrozen)
+  SPE_Actor.SetActorFrozen(akTarget, abFrozen)
 EndFunction
 Actor[] Function GetDetectedBy(Actor akActor) global
   return SPE_Actor.GetDetectedBy(akActor)
@@ -20,7 +20,7 @@ Keyword[] Function WornHasKeywordStrings(Actor akActor, String[] akKwds) global
   return SPE_Actor.WornHasKeywordStrings(akActor, akKwds, false)
 EndFunction
 Function Dismount(Actor akTarget) global
-  return SPE_Actor.Dismount(akTarget)
+  SPE_Actor.Dismount(akTarget)
 EndFunction
 
 ; Inventory Processing
