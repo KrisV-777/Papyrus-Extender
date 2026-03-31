@@ -73,6 +73,12 @@ Armor[] Function GetWornArmor(Actor akActor, int aiSlotMask = 0) global native
 Keyword[] Function WornHasKeywords(Actor akActor, Keyword[] akKeywords) global native
 Keyword[] Function WornHasKeywordStrings(Actor akActor, String[] asKeywords, bool abMatchPartial) global native
 
+; Get movement speeds for this actor. Default return values: https://en.uesp.net/wiki/Skyrim:Transport
+float Function GetRunSpeed(Actor akActor) global native
+float Function GetJogSpeed(Actor akActor) global native
+float Function GetFastWalkSpeed(Actor akActor) global native
+float Function GetWalkSpeed(Actor akActor) global native
+
 ; Get the players current dialogue target
 Actor Function GetPlayerSpeechTarget() global native
 
