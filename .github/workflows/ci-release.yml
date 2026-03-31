@@ -152,6 +152,7 @@ jobs:
         if: steps.cache-ss.outputs.cache-hit != 'true'
         run: |
           $repos = @("SRC")
+          New-Item -ItemType Directory -Path .github/Papyrus -Force | Out-Null
           Set-Location .github/Papyrus
           foreach ($repo in $repos) {
             New-Item -ItemType Directory -Name $repo
