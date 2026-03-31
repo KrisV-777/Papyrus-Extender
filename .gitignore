@@ -9,6 +9,7 @@ build/
 dist/SKSE/Plugins/*.dll
 dist/SKSE/Plugins/*.pdb
 .release
+*.pex
 
 .env*
 !.env.example
