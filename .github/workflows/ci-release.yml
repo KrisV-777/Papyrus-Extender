@@ -20,86 +20,185 @@ env:
   RELEASE_ASSET_DIR: release-assets
 
 jobs:
-  verify-scripts:
-    name: Verify Papyrus scripts
+  project-version:
+    name: Resolve Project Version
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: pwsh
-
+    outputs:
+      project_version: ${{ steps.version.outputs.project_version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify .pex files are up to date
+      - name: Extract version from xmake.lua
+        id: version
+        shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $srcRoot = 'dist/Source/Scripts'
-          $binRoot = 'dist/Scripts'
-
-          if (-not (Test-Path $srcRoot)) {
-            throw "Missing source scripts directory: $srcRoot"
+          $content = Get-Content -Path xmake.lua -Raw
+          $match = [regex]::Match($content, 'PROJECT_VERSION\s*=\s*"([^"]+)"')
+          if (-not $match.Success) {
+            throw 'Could not determine PROJECT_VERSION from xmake.lua'
           }
 
-          if (-not (Test-Path $binRoot)) {
-            throw "Missing compiled scripts directory: $binRoot"
+          $projectVersion = $match.Groups[1].Value
+          write-host "Resolved project version: $projectVersion"
+          "project_version=$projectVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+  compare-version:
+    name: Compare with Latest Release
+    needs: project-version
+    runs-on: windows-latest
+    outputs:
+      current_version: ${{ steps.compare.outputs.current_version }}
+      version_tag: ${{ steps.compare.outputs.version_tag }}
+      previous_release_version: ${{ steps.compare.outputs.previous_release_version }}
+      version_changed: ${{ steps.compare.outputs.version_changed }}
+    steps:
+      - name: Compare current version to latest release
+        id: compare
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $currentVersionText = '${{ needs.project-version.outputs.project_version }}'
+          $currentVersion = [version]$currentVersionText
+
+          $headers = @{
+            Authorization = "Bearer $env:GITHUB_TOKEN"
+            Accept = 'application/vnd.github+json'
+            'X-GitHub-Api-Version' = '2022-11-28'
           }
 
-          $pscFiles = Get-ChildItem -Path $srcRoot -Filter *.psc -File
-          if (-not $pscFiles -or $pscFiles.Count -eq 0) {
-            throw "No .psc files found in $srcRoot"
-          }
+          $previousReleaseVersion = ''
+          $versionChanged = 'false'
 
-          $failures = @()
+          if ('${{ github.event_name }}' -eq 'push') {
+            try {
+              $latest = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/releases/latest" -Headers $headers
+              $latestTag = [string]$latest.tag_name
+              $latestVersionText = $latestTag.TrimStart('v', 'V')
 
-          foreach ($psc in $pscFiles) {
-            $pexPath = Join-Path $binRoot ($psc.BaseName + '.pex')
-            if (-not (Test-Path $pexPath)) {
-              $failures += "Missing compiled file for $($psc.Name): $pexPath"
-              continue
+              if (-not [string]::IsNullOrWhiteSpace($latestVersionText)) {
+                $latestVersion = [version]$latestVersionText
+                $previousReleaseVersion = $latestVersionText
+                if ($currentVersion -gt $latestVersion) {
+                  $versionChanged = 'true'
+                }
+              } else {
+                $versionChanged = 'true'
+              }
+            } catch {
+              if ($_.Exception.Message.Contains('404')) {
+                $versionChanged = 'true'
+              } else {
+                throw
+              }
             }
-
-            $pscGitPath = ((Resolve-Path -Relative $psc.FullName) -replace '^[.][\\/]', '') -replace '\\', '/'
-            $pexGitPath = ((Resolve-Path -Relative $pexPath) -replace '^[.][\\/]', '') -replace '\\', '/'
-
-            $pscTime = git log -1 --format=%ct -- $pscGitPath
-            $pexTime = git log -1 --format=%ct -- $pexGitPath
-
-            if (-not $pscTime) {
-              $failures += "Unable to read git timestamp for $pscGitPath"
-              continue
-            }
-
-            if (-not $pexTime) {
-              $failures += "Unable to read git timestamp for $pexGitPath"
-              continue
-            }
-
-            if ([int64]$pexTime -lt [int64]$pscTime) {
-              $failures += "$pexGitPath is older than $pscGitPath"
-            }
           }
 
-          if ($failures.Count -gt 0) {
-            Write-Host "Found outdated Papyrus compiled scripts:"
-            $failures | ForEach-Object { Write-Host "- $_" }
-            throw "Papyrus .pex files are not up to date with .psc sources."
+          if ([string]::IsNullOrWhiteSpace($previousReleaseVersion)) {
+            $previousReleaseVersion = 'n/a'
           }
 
-          Write-Host "All .pex files are up to date with their .psc counterparts."
+          Write-Host "Current version='$currentVersionText'"
+          Write-Host "Last release version='$previousReleaseVersion'"
+          Write-Host "Version changed='$versionChanged'"
 
-  build:
-    name: Build
-    needs: verify-scripts
+          "current_version=$currentVersionText" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "version_tag=v$currentVersionText" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "previous_release_version=$previousReleaseVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "version_changed=$versionChanged" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+  compile-papyrus:
+    name: Compile Papyrus scripts
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache Script Sources
+        id: cache-ss
+        uses: actions/cache@v4
+        with:
+          path: |
+            .github/Papyrus/SRC
+            .github/Papyrus/SRC/TESV_Papyrus_Flags.flg
+          key: script-sources-clean-v1
+
+      - name: Cache Compiler
+        id: cache-com
+        uses: actions/cache@v4
+        with:
+          path: .github/Caprica
+          key: ${{ runner.os }}-papyrus-compiler-0.3.0a
+
+      - name: Fetch Caprica
+        if: steps.cache-com.outputs.cache-hit != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          New-Item -ItemType Directory -Path .github -Force | Out-Null
+          gh release download 0.3.0a -R KrisV-777/Caprica --pattern "Caprica.zip" --dir .github --clobber
+          7z x .github/Caprica.zip "-o.github\Caprica" -y
+
+          if (-not (Test-Path ".github/Caprica/Caprica.exe")) {
+            Write-Error "Caprica.exe not found after extraction."
+            exit 1
+          }
+
+      - name: Checkout Papyrus Sources
+        if: steps.cache-ss.outputs.cache-hit != 'true'
+        run: |
+          $repos = @("SRC")
+          Set-Location .github/Papyrus
+          foreach ($repo in $repos) {
+            New-Item -ItemType Directory -Name $repo
+            Set-Location $repo
+            git init
+            git remote add origin https://github.com/IHateMyKite/PAPYRUS.git
+            git sparse-checkout set --no-cone $repo
+            git fetch --depth=1 origin main
+            git checkout main
+            Remove-Item .git -Recurse -Force
+            Set-Location ..
+          }
+
+      - name: Checkout TESV Flags File
+        if: steps.cache-ss.outputs.cache-hit != 'true'
+        run: |
+          cd .github/Papyrus/SRC
+          mkdir temp
+          cd temp
+          git init
+          git remote add origin https://github.com/Rukan/Grimy-Skyrim-Papyrus-Source.git
+          git sparse-checkout set --no-cone 'TESV_Papyrus_Flags.flg'
+          git fetch --depth=1 origin master
+          git checkout master
+          Remove-Item .git -Recurse -Force
+          mv TESV_Papyrus_Flags.flg ../TESV_Papyrus_Flags.flg
+          Set-Location ..
+          Remove-Item temp -Recurse -Force
+
+      - name: Run Caprica
+        shell: pwsh
+        run: .github/Caprica/Caprica.exe --game skyrim --import ".github/Papyrus/SRC;" --output "dist/Scripts" --flags=".github/Papyrus/SRC/TESV_Papyrus_Flags.flg" "${{ github.workspace }}/dist/Source/Scripts" -R -q
+
+      - name: Upload Compiled Scripts
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-papyrus
+          path: dist/Scripts
+
+  build-dll:
+    name: Build DLL
     runs-on: windows-latest
     defaults:
       run:
         shell: pwsh
     outputs:
-      artifact_name: ${{ steps.package.outputs.artifact_name }}
-      version: ${{ steps.version.outputs.version }}
-      version_tag: ${{ steps.version.outputs.version_tag }}
-      version_changed: ${{ steps.version.outputs.version_changed }}
+      artifact_name: ${{ steps.stage.outputs.artifact_name }}
 
     steps:
       - name: Checkout
@@ -107,44 +206,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-
-      - name: Detect version change
-        id: version
-        run: |
-          $versionPattern = 'PROJECT_VERSION = "([^"]+)"'
-          $currentFile = Get-Content xmake.lua -Raw
-
-          $currentMatch = [regex]::Match($currentFile, $versionPattern)
-          if (-not $currentMatch.Success) {
-            throw 'Unable to find PROJECT_VERSION in xmake.lua.'
-          }
-
-          $currentVersion = $currentMatch.Groups[1].Value
-          $versionChanged = 'false'
-          $latestTag = 'n/a'
-          $previousReleaseVersion = 'n/a'
-
-          if ('${{ github.event_name }}' -eq 'push') {
-            $latestTag = git tag --list 'v*' --sort=-v:refname |
-              Where-Object { $_ -match '^v\d+\.\d+\.\d+$' } |
-              Select-Object -First 1
-
-            if ($latestTag) {
-              $previousReleaseVersion = $latestTag -replace '^v', ''
-              if ($previousReleaseVersion -ne $currentVersion) {
-                $versionChanged = 'true'
-              }
-            } else {
-              $versionChanged = 'true'
-            }
-          }
-
-          Write-Host "Current version='$currentVersion'"
-          Write-Host "Last release version='$previousReleaseVersion'"
-
-          "version=$currentVersion" >> $env:GITHUB_OUTPUT
-          "version_tag=v$currentVersion" >> $env:GITHUB_OUTPUT
-          "version_changed=$versionChanged" >> $env:GITHUB_OUTPUT
 
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
@@ -158,10 +219,60 @@ jobs:
       - name: Build
         run: xmake -b -y ScrabsPapyrusExtender
 
+      - name: Stage DLL files
+        id: stage
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Path out/dll -Force | Out-Null
+
+          Copy-Item -Path 'build/windows/x64/release/ScrabsPapyrusExtender.dll' -Destination out/dll/ScrabsPapyrusExtender.dll -Force
+
+          if (Test-Path 'build/windows/x64/release/ScrabsPapyrusExtender.pdb') {
+            Copy-Item -Path 'build/windows/x64/release/ScrabsPapyrusExtender.pdb' -Destination out/dll/ScrabsPapyrusExtender.pdb -Force
+          }
+
+          "artifact_name=built-dll" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+      - name: Upload DLL artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.stage.outputs.artifact_name }}
+          path: out/dll
+          if-no-files-found: error
+
+  package:
+    name: Package Release Artifact
+    needs:
+      - project-version
+      - compile-papyrus
+      - build-dll
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    outputs:
+      artifact_name: ${{ steps.package.outputs.artifact_name }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download DLL artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build-dll.outputs.artifact_name }}
+          path: artifacts/built-dll
+
+      - name: Download compiled Papyrus
+        uses: actions/download-artifact@v4
+        with:
+          name: compiled-papyrus
+          path: artifacts/compiled-papyrus
+
       - name: Package release artifact
         id: package
         run: |
-          $version = '${{ steps.version.outputs.version }}'
+          $version = '${{ needs.project-version.outputs.project_version }}'
           $artifactName = "Kris Papyrus Extender - V$version"
           $archivePath = Join-Path $env:RUNNER_TEMP "$artifactName.zip"
           $stagingDir = Join-Path $env:RUNNER_TEMP $artifactName
@@ -188,11 +299,14 @@ jobs:
             Remove-Item $pluginDir -Force
           }
           New-Item -ItemType Directory -Path $pluginDir -Force | Out-Null
-          Copy-Item build\windows\x64\release\ScrabsPapyrusExtender.dll $pluginDir -Force
+          Copy-Item -Path artifacts\built-dll\* -Destination $pluginDir -Recurse -Force
 
-          if (Test-Path build\windows\x64\release\ScrabsPapyrusExtender.pdb) {
-            Copy-Item build\windows\x64\release\ScrabsPapyrusExtender.pdb $pluginDir -Force
+          $scriptsDir = Join-Path $stagingDir 'Scripts'
+          if (Test-Path $scriptsDir) {
+            Remove-Item $scriptsDir -Recurse -Force
           }
+          New-Item -ItemType Directory -Path $scriptsDir -Force | Out-Null
+          Copy-Item -Path artifacts\compiled-papyrus\* -Destination $scriptsDir -Recurse -Force
 
           Compress-Archive -Path (Join-Path $stagingDir '*') -DestinationPath $archivePath
 
@@ -207,8 +321,10 @@ jobs:
 
   release:
     name: Create Release
-    needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.build.outputs.version_changed == 'true'
+    needs:
+      - package
+      - compare-version
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.compare-version.outputs.version_changed == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -223,7 +339,7 @@ jobs:
         id: tag
         shell: bash
         run: |
-          if git rev-parse "refs/tags/${{ needs.build.outputs.version_tag }}" >/dev/null 2>&1; then
+          if git rev-parse "refs/tags/${{ needs.compare-version.outputs.version_tag }}" >/dev/null 2>&1; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
           else
             echo "exists=false" >> "$GITHUB_OUTPUT"
@@ -233,14 +349,14 @@ jobs:
         if: steps.tag.outputs.exists == 'false'
         uses: actions/download-artifact@v4
         with:
-          name: ${{ needs.build.outputs.artifact_name }}
+          name: ${{ needs.package.outputs.artifact_name }}
           path: ${{ env.RELEASE_ASSET_DIR }}
 
       - name: Create GitHub release
         if: steps.tag.outputs.exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.build.outputs.version_tag }}
-          name: ${{ needs.build.outputs.version_tag }}
-          files: ${{ env.RELEASE_ASSET_DIR }}/${{ needs.build.outputs.artifact_name }}.zip
+          tag_name: ${{ needs.compare-version.outputs.version_tag }}
+          name: ${{ needs.compare-version.outputs.version_tag }}
+          files: ${{ env.RELEASE_ASSET_DIR }}/${{ needs.package.outputs.artifact_name }}.zip
           generate_release_notes: true
