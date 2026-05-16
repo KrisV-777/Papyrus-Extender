@@ -4,9 +4,17 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'xmake.lua'
+      - 'src/**'
+      - 'dist/Source/Scripts/*.psc'
   pull_request:
     branches:
       - main
+    paths:
+      - 'xmake.lua'
+      - 'src/**'
+      - 'dist/Source/Scripts/*.psc'
   workflow_dispatch:
 
 permissions:
