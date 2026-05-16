@@ -3,6 +3,8 @@
 A modders ressource that exposes various new utility functions to the papyrus scripting language.
 
 For a list of all available functions (by Papyrus type) and their respective documentation see [here](https://github.com/KrisV-777/Papyrus-Extender/tree/main/dist/Source/Scripts).  
+I take on requests to further expand this library. Feel free to create an issue (or contact me otherwise) with a detailed explanation of what you want to achieve and how I can help you.
+
 The Nexus Mods mirror can be found [here](https://www.nexusmods.com/skyrimspecialedition/mods/115164).
 
 ## Requirements
