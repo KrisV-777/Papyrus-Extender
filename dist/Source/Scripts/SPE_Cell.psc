@@ -9,3 +9,10 @@ WorldSpace[] Function GetExteriorWorldSpaces(Cell akCell) global native
 ; Shorthand for GetWorldSpaceLocation(GetExteriorWorldSpaces(akCell)...)
 Location[] Function GetExteriorLocations(Cell akCell) global native
 
+; Return the Location of the given world space/cell
+Location Function GetWorldSpaceLocation(WorldSpace akWorld) global native
+Location Function GetCellLocation(Cell akCell) global native
+
+; Returns all cells attached to the given cell within the specified radius (in units of cells)
+; Default loaded cells is 5, therefore a radius of 2 and up will usually return all currently loaded cells
+Cell[] Function GetAttachedCells(int aiRadius) global native
