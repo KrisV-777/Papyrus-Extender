@@ -15,7 +15,8 @@
 // 	}
 // }
 
-extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
+
+SKSE_PLUGIN_LOAD(const SKSE::LoadInterface* a_skse)
 {
     const auto plugin = SKSE::PluginDeclaration::GetSingleton();
     const auto InitLogger = [&plugin]() -> bool {
@@ -53,7 +54,7 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
         return false;
     }
 
-    SKSE::Init(a_skse);
+    SKSE::Init(a_skse, { .trampoline = true, .trampolineSize = 256 });
 
     if (!Papyrus::Register()) {
         logger::critical("Failed to register papyrus functions");

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Data/QuestMarker.h"
-#include "Trampoline.h"
+
+#include <xbyak/xbyak.h>
 
 namespace Hooks::Patch
 {
@@ -25,39 +26,32 @@ namespace Hooks::Patch
         return target;
     }
 
-    struct UpdateQuestsHook : Trampoline::Hook<5>
+    struct HookCodeGenerator : Xbyak::CodeGenerator
     {
-        struct HookCodeGenerator : Xbyak::CodeGenerator
+        HookCodeGenerator(std::uintptr_t a_cnoAddr)
         {
-            HookCodeGenerator(std::uintptr_t a_cnoAddr)
-            {
-                Xbyak::Label hookLabel;
-                Xbyak::Label cnoLabel;
+            Xbyak::Label hookLabel;
+            Xbyak::Label cnoLabel;
 
-                push(rcx);
-                push(rdx);
-                push(r8);
-                push(r9);
+            push(rcx);
+            push(rdx);
+            push(r8);
+            push(r9);
 
-                call(ptr[rip + hookLabel]);
+            call(ptr[rip + hookLabel]);
 
-                pop(r9);
-                pop(r8);
-                pop(rdx);
-                pop(rcx);
+            pop(r9);
+            pop(r8);
+            pop(rdx);
+            pop(rcx);
 
-                jmp(ptr[rip + cnoLabel]);
+            jmp(ptr[rip + cnoLabel]);
 
-                L(hookLabel), dq(reinterpret_cast<std::uintptr_t>(&UpdateQuests));
-                L(cnoLabel), dq(a_cnoAddr);
+            L(hookLabel), dq(reinterpret_cast<std::uintptr_t>(&UpdateQuests));
+            L(cnoLabel), dq(a_cnoAddr);
 
-                ready();
-            }
-        };
-
-        UpdateQuestsHook(std::uintptr_t a_hookedAddress, uintptr_t a_cnoAddr) :
-          Hook{ a_hookedAddress, HookCodeGenerator{ a_cnoAddr } }
-        {}
+            ready();
+        }
     };
 
     void Install()
@@ -65,8 +59,14 @@ namespace Hooks::Patch
         const auto address = REL::RelocationID{ 50826, 51691 }.address() + REL::VariantOffset{ 0x114, 0x180, 0x114 }.offset();
         const auto target = getJmpTarget(address);
 
-        UpdateQuestsHook updateQuestsHook{ address, target };
-        static Trampoline::DefaultTrampoline tramp1{ updateQuestsHook.getSize() };
-        tramp1.write_branch(updateQuestsHook);
+        if (target == static_cast<std::uintptr_t>(-1)) {
+            logger::error("Failed to locate CNO jump target for quest marker patch");
+            return;
+        }
+
+        auto& trampoline = SKSE::GetTrampoline();
+        HookCodeGenerator hookCode{ target };
+        auto* hookTarget = trampoline.allocate(hookCode);
+        trampoline.write_branch<5>(address, reinterpret_cast<std::uintptr_t>(hookTarget));
     }
 }

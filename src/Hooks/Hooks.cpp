@@ -10,7 +10,6 @@ namespace Hooks
     {
         logger::info("installing hooks");
 
-        SKSE::AllocTrampoline(64);
         auto& trampoline = SKSE::GetTrampoline();
 
         REL::Relocation<std::uintptr_t> det{ REL::RelocationID(41659, 42742), REL::VariantOffset(0x526, 0x67B, 0x67B) };

@@ -1,4 +1,4 @@
-set_xmakever("2.9.5")
+set_xmakever("3.1.1")
 
 -- Globals
 PROJECT_NAME = "ScrabsPapyrusExtender"
