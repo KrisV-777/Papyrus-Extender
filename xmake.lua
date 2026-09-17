@@ -2,7 +2,7 @@ set_xmakever("3.1.1")
 
 -- Globals
 PROJECT_NAME = "ScrabsPapyrusExtender"
-PROJECT_VERSION = "2.3.0"
+PROJECT_VERSION = "2.3.1"
 
 -- Project
 set_project(PROJECT_NAME)
