@@ -2,8 +2,8 @@
 
 #include <algorithm>
 #include <cctype>
-#include <regex>
 #include <ranges>
+#include <regex>
 #include <string>
 #include <string_view>
 #include <vector>
