@@ -4,7 +4,7 @@
 #include <lua.hpp>
 #include <sol/sol.hpp>
 
-#include "Util/Keywords.h"
+#include "common/KrisV/Util/Keywords.h"
 
 namespace Papyrus::Utility
 {

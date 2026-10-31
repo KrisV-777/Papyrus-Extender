@@ -65,7 +65,7 @@ namespace Geography
     inline CellTraversal TraverseInteriorCellStartingAt(RE::TESObjectCELL* a_cell, const int a_depth, const RE::TESObjectREFR* a_ref = nullptr)
     {
         CellTraversal seen;
-        if (!a_cell->IsInteriorCell()) {
+        if (!a_cell->IsInteriorCell() || a_depth <= 0) {
             return seen;
         }
         seen.insert({ a_cell, CellPath{ CellEdge{ nullptr, a_ref, 0.f } } });
@@ -81,7 +81,6 @@ namespace Geography
             if (!cell->IsInteriorCell() || path.size() + 1 > a_depth) {
                 continue;
             }
-            // list of all adjacent cells and the closest door
             std::unordered_map<RE::TESObjectCELL*, CellEdge> adjacent{};
             cell->ForEachReference([&adjacent, &entryPos, &seen, dist](RE::TESObjectREFR* a_ref) {
                 const auto linkedDoor = GetLinkedDoor(a_ref);
@@ -126,7 +125,6 @@ namespace Geography
         return seen;
     }
 
-    // stolen from: https://github.com/alexsylex/CompassNavigationOverhaul/blob/main/include/utils/Geometry.h
     inline RE::NiPoint3 GetRealPosition(const RE::TESObjectREFR* a_objRef)
     {
         RE::NiPoint3 position = a_objRef->GetPosition();
@@ -147,9 +145,12 @@ namespace Geography
 
     inline const CellEdge* GetClosestExteriorCellEdge(const CellTraversal& a_paths)
     {
-        float minDist = -1;
+        float minDist = -1.f;
         const CellEdge* closestEdge = nullptr;
         for (const auto& [cell, path] : a_paths) {
+            if (!cell || path.empty()) {
+                continue;
+            }
             if (cell->IsExteriorCell()) {
                 const auto& currDist = path.back().dist;
                 if (minDist < 0.f || currDist < minDist) {
@@ -163,7 +164,11 @@ namespace Geography
 
     inline const CellEdge* GetClosestExteriorCellEdge(const RE::TESObjectREFR* a_ref)
     {
-        const auto& paths = TraverseInteriorCellStartingAt(a_ref->GetParentCell(), 10, a_ref);
+        const auto cell = a_ref->GetParentCell();
+        if (!cell) {
+            return nullptr;
+        }
+        const auto& paths = TraverseInteriorCellStartingAt(cell, 10, a_ref);
         return GetClosestExteriorCellEdge(paths);
     }
 
@@ -186,13 +191,22 @@ namespace Geography
     {
         logger::info("GetIntIntDistance: 0x{:X} - 0x{:X}", a_interior1->GetFormID(), a_interior2->GetFormID());
 
-        const auto& paths = TraverseInteriorCellStartingAt(a_interior1->GetParentCell(), 10, a_interior1);
+        const auto cell1 = a_interior1->GetParentCell();
+        if (!cell1) {
+            return -1.f;
+        }
 
-        const auto& found = paths.find(a_interior2->GetParentCell());
+        const auto& paths = TraverseInteriorCellStartingAt(cell1, 10, a_interior1);
+        const auto cell2 = a_interior2->GetParentCell();
+        if (!cell2) {
+            return -1.f;
+        }
+
+        const auto& found = paths.find(cell2);
         if (found != paths.end()) {
             const auto& door = found->second.back();
             const auto& ref1ToDoor = door.dist;
-            const auto& doorToRef2 = door.exterior->GetPosition().GetDistance(a_interior2->GetPosition());
+            const auto& doorToRef2 = door.exterior ? door.exterior->GetPosition().GetDistance(a_interior2->GetPosition()) : -1.f;
 
             logger::info("interior cells are linked: {} + {} = {}", ref1ToDoor, doorToRef2, ref1ToDoor + doorToRef2);
             return ref1ToDoor + doorToRef2;
@@ -216,15 +230,16 @@ namespace Geography
 
     inline float GetDistanceBetween(const RE::TESObjectREFR* a_ref1, const RE::TESObjectREFR* a_ref2)
     {
-        auto ref1 = a_ref1;
-        auto ref2 = a_ref2;
-
         const auto cell1 = a_ref1->GetParentCell();
         const auto cell2 = a_ref2->GetParentCell();
+        if (!cell1 || !cell2) {
+            return GetDistance(a_ref1, a_ref2);
+        }
 
         if (cell1 == cell2) {
-            logger::info("in same cell: {}", GetRealPosition(ref1).GetDistance(GetRealPosition(ref2)));
-            return GetRealPosition(ref1).GetDistance(GetRealPosition(ref2));
+            const auto dist = GetRealPosition(a_ref1).GetDistance(GetRealPosition(a_ref2));
+            logger::info("in same cell: {}", dist);
+            return dist;
         }
 
         if (cell1->IsInteriorCell() && !cell2->IsInteriorCell()) {

@@ -8,7 +8,7 @@
 #include <frozen/string.h>
 
 #include "Data/ActorManager.h"
-#include "Util/Keywords.h"
+#include "common/KrisV/Util/Keywords.h"
 
 namespace Papyrus::Actor
 {

@@ -1,6 +1,6 @@
 #include "Cell.h"
 
-#include "Util/Geography.h"
+#include "common/KrisV/Util/Geography.h"
 
 namespace Papyrus::Cell
 {

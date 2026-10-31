@@ -1,7 +1,7 @@
 #include "ObjectRef.h"
 
-#include "Util/Geography.h"
-#include "Util/Keywords.h"
+#include "common/KrisV/Util/Geography.h"
+#include "common/KrisV/Util/Keywords.h"
 
 namespace Papyrus::ObjectRef
 {
