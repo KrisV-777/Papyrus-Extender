@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Util/StringUtil.h"
+#include "common/KrisV/Util/String.h"
 
 namespace Papyrus::Events
 {
@@ -9,7 +9,7 @@ namespace Papyrus::Events
         AnimationEventEx_Filter() = default;
         AnimationEventEx_Filter(const RE::BSFixedString& a_eventName)
         {
-            const auto splits = StringUtil::StringSplitToOwned(a_eventName, '.');
+            const auto splits = Util::StringSplitToOwned(a_eventName, "."sv);
             eventName[0] = RE::BSFixedString{ splits.front() };
             eventName[1] = RE::BSFixedString{ splits.size() > 1 ? splits.back() : "" };
             logger::info("Registered Callback for AnimEventEx: {} - Payload: {}", eventName[0].data(), eventName[1].data());

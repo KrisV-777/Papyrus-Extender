@@ -1,5 +1,9 @@
 #pragma once
 
+#include <optional>
+#include <type_traits>
+#include <utility>
+
 namespace Script
 {
     using VM = RE::BSScript::Internal::VirtualMachine;

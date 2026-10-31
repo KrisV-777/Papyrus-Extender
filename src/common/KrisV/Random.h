@@ -1,6 +1,12 @@
 #pragma once
 
+#include <algorithm>
+#include <concepts>
 #include <random>
+#include <ranges>
+#include <string>
+#include <string_view>
+#include <type_traits>
 
 template <typename T>
 concept Container = requires(T a)

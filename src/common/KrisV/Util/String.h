@@ -1,5 +1,13 @@
 #pragma once
 
+#include <algorithm>
+#include <cctype>
+#include <regex>
+#include <ranges>
+#include <string>
+#include <string_view>
+#include <vector>
+
 namespace Util
 {
 #pragma warning(push)
