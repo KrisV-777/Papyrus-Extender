@@ -3,6 +3,7 @@
 #include "Data/ActorManager.h"
 #include "Data/QuestMarker.h"
 #include "Patch.h"
+#include "common/KrisV/Hooks.h"
 
 namespace Hooks
 {
@@ -10,19 +11,10 @@ namespace Hooks
     {
         logger::info("installing hooks");
 
-        auto& trampoline = SKSE::GetTrampoline();
-
-        REL::Relocation<std::uintptr_t> det{ REL::RelocationID(41659, 42742), REL::VariantOffset(0x526, 0x67B, 0x67B) };
-        _DoDetect = trampoline.write_call<5>(det.address(), DoDetect);
-
-        REL::Relocation<std::uintptr_t> upc{ RE::Character::VTABLE[0] };
-        _UpdateCombat = upc.write_vfunc(0x0E4, UpdateCombat);
-
-        REL::Relocation<std::uintptr_t> amd{ REL::RelocationID(36359, 37350), REL::VariantOffset(0xF0, 0xFB, 0xFB) };
-        _ApplyMovementDelta = trampoline.write_call<5>(amd.address(), ApplyMovementDelta);
-
-        REL::Relocation<std::uintptr_t> gqm{ REL::RelocationID{ 50826, 51691 }, REL::VariantOffset{ 0xFB, 0x167, 0xFB } };
-        _GetQuestMarkerRef = trampoline.write_call<5>(gqm.address(), GetQuestMarkerRef);
+        _DoDetect = KrisV::InstallCall(KrisV::kDoDetect, DoDetect);
+        _UpdateCombat = KrisV::InstallVFunc(RE::Character::VTABLE[0], 0x0E4, UpdateCombat);
+        _ApplyMovementDelta = KrisV::InstallCall(KrisV::kApplyMovementDelta, ApplyMovementDelta);
+        _GetQuestMarkerRef = KrisV::InstallCall(KrisV::kGetQuestMarkerRef, GetQuestMarkerRef);
 
         HINSTANCE dllHandle = LoadLibrary(TEXT("CompassNavigationOverhaul.dll"));
         if (dllHandle != NULL) {
@@ -30,8 +22,7 @@ namespace Hooks
             Patch::Install();
         } else {
             logger::info("installing cno hook");
-            REL::Relocation<std::uintptr_t> udq{ REL::RelocationID{ 50826, 51691 }, REL::VariantOffset{ 0x114, 0x180, 0x114 } };
-            _UpdateQuests = trampoline.write_call<5>(udq.address(), UpdateQuests);
+            _UpdateQuests = KrisV::InstallCall(KrisV::kUpdateQuests, UpdateQuests);
         }
     }
 
