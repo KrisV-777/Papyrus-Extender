@@ -1,6 +1,6 @@
 #include "CustomMenu.h"
 
-#include "Interface.h"
+#include "common/KrisV/Interface/Interface.h"
 
 namespace Internal::Interface
 {

@@ -3,7 +3,7 @@
 #include "Data/ActorManager.h"
 #include "Data/QuestMarker.h"
 #include "Patch.h"
-#include "common/KrisV/Hooks.h"
+#include "common/Hooks.h"
 
 namespace Hooks
 {
@@ -11,10 +11,10 @@ namespace Hooks
     {
         logger::info("installing hooks");
 
-        _DoDetect = KrisV::InstallCall(KrisV::kDoDetect, DoDetect);
-        _UpdateCombat = KrisV::InstallVFunc(RE::Character::VTABLE[0], 0x0E4, UpdateCombat);
-        _ApplyMovementDelta = KrisV::InstallCall(KrisV::kApplyMovementDelta, ApplyMovementDelta);
-        _GetQuestMarkerRef = KrisV::InstallCall(KrisV::kGetQuestMarkerRef, GetQuestMarkerRef);
+        _DoDetect = Hooks::InstallHook(KrisV::kDoDetect, DoDetect);
+        _UpdateCombat = Hooks::InstallVFunc(RE::Character::VTABLE[0], 0x0E4, UpdateCombat);
+        _ApplyMovementDelta = Hooks::InstallHook(KrisV::kApplyMovementDelta, ApplyMovementDelta);
+        _GetQuestMarkerRef = Hooks::InstallHook(KrisV::kGetQuestMarkerRef, GetQuestMarkerRef);
 
         HINSTANCE dllHandle = LoadLibrary(TEXT("CompassNavigationOverhaul.dll"));
         if (dllHandle != NULL) {
@@ -22,7 +22,7 @@ namespace Hooks
             Patch::Install();
         } else {
             logger::info("installing cno hook");
-            _UpdateQuests = KrisV::InstallCall(KrisV::kUpdateQuests, UpdateQuests);
+            _UpdateQuests = Hooks::InstallHook(KrisV::kUpdateQuests, UpdateQuests);
         }
     }
 

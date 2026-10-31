@@ -1,43 +1,18 @@
 ﻿#pragma once
 
+#include "common/HookData.h"
+
 namespace KrisV
 {
-    namespace Hooks
-    {
-        struct HookInfo
-        {
-            constexpr explicit HookInfo(REL::RelocationID a_relocation, REL::VariantOffset a_offset) noexcept :
-              relocation(a_relocation), offset(a_offset) {}
+    // uint8_t* DoDetect(RE::Actor* viewer, RE::Actor* target, int32_t& detectval, uint8_t& unk04, uint8_t& unk05, uint32_t& unk06, RE::NiPoint3& pos, float& unk08, float& unk09, float& unk10)
+    static constexpr Hooks::HookData kDoDetect{ REL::RelocationID{ 41659, 42742 }, REL::VariantOffset{ 0x526, 0x67B, 0x67B } };
 
-            REL::RelocationID relocation;
-            REL::VariantOffset offset;
-
-            [[nodiscard]] std::uintptr_t address() const
-            {
-                const REL::Relocation<std::uintptr_t> target{ relocation, offset };
-                return target.address();
-            }
-        };
-
-        static constexpr HookInfo kDoDetect{ REL::RelocationID{ 41659, 42742 }, REL::VariantOffset{ 0x526, 0x67B, 0x67B } };
-        static constexpr HookInfo kApplyMovementDelta{ REL::RelocationID{ 36359, 37350 }, REL::VariantOffset{ 0xF0, 0xFB, 0xFB } };
-        static constexpr HookInfo kGetQuestMarkerRef{ REL::RelocationID{ 50826, 51691 }, REL::VariantOffset{ 0xFB, 0x167, 0xFB } };
-        static constexpr HookInfo kUpdateQuests{ REL::RelocationID{ 50826, 51691 }, REL::VariantOffset{ 0x114, 0x180, 0x114 } };
-
-        template <class T>
-        inline auto InstallCall(HookInfo a_hook, T a_target)
-        {
-            auto& trampoline = SKSE::GetTrampoline();
-            return trampoline.write_call<5>(a_hook.address(), a_target);
-        }
-
-        template <class T>
-        inline auto InstallVFunc(const auto& a_vtable, std::size_t a_index, T a_target)
-        {
-            REL::Relocation<std::uintptr_t> vtable{ a_vtable.address() };
-            return vtable.write_vfunc(a_index, a_target);
-        }
-    }
-
-    using namespace Hooks;
+    // void Manager::ApplyMovementDelta(RE::Actor* a_actor, float a_delta)
+    static constexpr Hooks::HookData kApplyMovementDelta{ REL::RelocationID{ 36359, 37350 }, REL::VariantOffset{ 0xF0, 0xFB, 0xFB } };
+    
+    // RE::RefHandle GetQuestMarkerRef(int64_t a_1, int64_t a_2, RE::TESQuest* a_3)
+    static constexpr Hooks::HookData kGetQuestMarkerRef{ REL::RelocationID{ 50826, 51691 }, REL::VariantOffset{ 0xFB, 0x167, 0xFB } };
+    
+    // bool UpdateQuests(void* a_1, void* a_2, RE::NiPoint3* a_3, const RE::RefHandle& a_refHandle, std::int32_t a_5)
+    static constexpr Hooks::HookData kUpdateQuests{ REL::RelocationID{ 50826, 51691 }, REL::VariantOffset{ 0x114, 0x180, 0x114 } };
 }
