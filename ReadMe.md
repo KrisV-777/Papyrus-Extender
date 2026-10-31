@@ -1,4 +1,4 @@
-﻿# SKSE-Shared
+﻿# SKSE-Common
 
 A collection of reusable C++ source and header files shared across multiple projects.
 
@@ -6,16 +6,16 @@ This repository is **not** intended to be built independently. Instead, it is em
 
 ## Integration
 
-To use the repository, add it to your `src` directly, effectively treating it as part of your own code base
+To use the repository, I recommend adding it to your `src` directory directly, effectively treating it as part of your own code base
 
 ```
-subtree add --prefix=src/shared https://github.com/KrisV-777/SKSE-Shared.git master
+subtree add --prefix=src/common https://github.com/KrisV-777/SKSE-Common.git master
 ```
 
 Changes can be pulled from upstream with
 
 ```
-git subtree pull --prefix=src/shared https://github.com/KrisV-777/SKSE-Shared.git master --squash
+git subtree pull --prefix=src/common https://github.com/KrisV-777/SKSE-Common.git master --squash
 ```
 
-Pull Requests are, of course, accepted.
+Pull Requests are, of course, accepted and encourages.
